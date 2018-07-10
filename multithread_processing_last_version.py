@@ -50,16 +50,18 @@ def on_message(client, userdata, message):
 			try:
 				dict_a.update(json.loads(str(message.payload.decode("utf-8"))));
 				list_of_dict_a.append(copy.deepcopy(dict_a))
-			except ValueError:
+			except ValueError as e:
 				print(">>> Errore decodifica")
+				print(e)
 				#print("Contenuto pacchetto:\n", str(message.payload.decode("utf-8")))
 		elif message.topic == topic_sensors_b:
 			print ("Message received on topic: ", topic_sensors_b)
 			try:
 				dict_b.update(json.loads(str(message.payload.decode("utf-8"))));
 				list_of_dict_b.append(copy.deepcopy(dict_b))
-			except ValueError:
+			except ValueError as e:
 				print(">>> Errore decodifica")
+				print(e)
 				#print("Contenuto pacchetto:\n", str(message.payload.decode("utf-8")))
 		else:
 			print(">>> Errore\n")
