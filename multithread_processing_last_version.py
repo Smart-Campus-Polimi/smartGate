@@ -88,7 +88,7 @@ class Subscriber_thread(threading.Thread):
 
 	def __init__(self):
 		threading.Thread.__init__(self)
-		self.client_name = "localhost"
+		self.client_name = "localhost"+str(datetime.datetime.now())
 		self.broker_address = BROKER_ADDRESS;
 		self.topic_sensors_a = "smartgate/sg1/mls/sa"
 		self.topic_sensors_b = "smartgate/sg1/mls/sb"
@@ -105,7 +105,7 @@ class Subscriber_thread(threading.Thread):
 		subscriber.subscribe(self.topic_sensors_a);
 		print(">>> Subscribed!\n")
 		print (">>> Subscribing to topic:", self.topic_sensors_b);
-		print(">>> Subscribed!\n")
+		print(">>> Subscribed!\n") 
 		subscriber.subscribe(self.topic_sensors_b);
 		subscriber.loop_forever()
 
@@ -189,16 +189,27 @@ class Processer_thread(threading.Thread):
 		try:
 			min_ts = min(p0b[0][0],p0a[0][0],p1a[0][0],p1b[0][0])
 			max_ts = max(p0b[len(p0b)-1][0],p0a[len(p0a)-1][0],p1b[len(p1b)-1][0],p1a[len(p1a)-1][0])
-		except IndexError:
+		
+
+			interval = int(max_ts-min_ts)
+
+			min_ts_a = min(p0a[0][0],p1a[0][0])
+			min_ts_b = min(p0b[0][0],p1b[0][0])
+
+		except IndexError as e_indx:
 			print("Dimensione p0a: ", len(p0a))
 			print("Dimensione p0b: ", len(p0b))
 			print("Dimensione p1a: ", len(p1a))
 			print("Dimensione p1b: ", len(p1b))
 
-		interval = int(max_ts-min_ts)
+			print(e_indx)
+			print("chiudo il thread")
 
-		min_ts_a = min(p0a[0][0],p1a[0][0])
-		min_ts_b = min(p0b[0][0],p1b[0][0])
+			#skip this thread
+			return
+
+
+
 		min_ts_side = min(min_ts_a, min_ts_b)
 
 		max_ts_a = p0a[len(p0a)-1][0]
