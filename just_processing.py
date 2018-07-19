@@ -8,7 +8,7 @@ import getopt
 import sys
 
 
-def just_processing(a, b, delta, span, enough_zero, infrared_param, use):
+def just_processing(a, b, delta, var, use):
 	use_infra = use[0]
 	use_pir = use[1]
 	#use_anal = use[2]
@@ -38,8 +38,6 @@ def just_processing(a, b, delta, span, enough_zero, infrared_param, use):
 	p1b_temp = []
 	infrared_temp_b = []
 	analog_temp_b = []
-	activate_infra_1 = None
-	activate_infra_0 = None
 
 	for packet in a:
 		p0a_temp = packet['P0A']
@@ -108,8 +106,8 @@ def just_processing(a, b, delta, span, enough_zero, infrared_param, use):
 	    array_support.append(0);
 	#print("Lunghezza supporto: ", len(array_support))
 	if use_infra:
-		infrared_a = f.processing_infrared(infrared_a, enough_zero)
-		infrared_b = f.processing_infrared(infrared_b, enough_zero)
+		infrared_a = f.processing_infrared(infrared_a, var)
+		infrared_b = f.processing_infrared(infrared_b, var)
 		analog_a = f.convert_list_int(analog_a)
 		analog_b = f.convert_list_int(analog_b)
 
@@ -137,15 +135,21 @@ def just_processing(a, b, delta, span, enough_zero, infrared_param, use):
 			return
 		#print("Lunghezza p1b: ", len(uniform_p1b))
 
-		pir_mask = f.generate_mask(array_support,uniform_p0a,uniform_p0b,uniform_p1a,uniform_p1b)
+		#pir_mask = f.generate_mask(array_support,uniform_p0a,uniform_p0b,uniform_p1a,uniform_p1b)
 
 		activation_p0a = f.activate(uniform_p0a)
 		activation_p1a = f.activate(uniform_p1a)
 		activation_p0b = f.activate(uniform_p0b)
 		activation_p1b = f.activate(uniform_p1b)
 
-		activation_mask = f.activate(pir_mask)
-
+		#activation_mask = f.activate(pir_mask)
+		if processing:
+			ins_a, out_a = f.count_entries(activation_p1a,activation_p0a,'A', activation_p1b, activation_p0b, delta, var)
+			ins_b, out_b = f.count_entries(activation_p1b,activation_p0b,'B', activation_p1a, activation_p0a, delta, var)
+		
+		if processing:
+			I_pir = max(ins_a, ins_b);
+			O_pir= max(out_a, out_b);
 
 
 	if use_infra:
@@ -170,22 +174,27 @@ def just_processing(a, b, delta, span, enough_zero, infrared_param, use):
 			return
 		#print("Lunghezza analog_b: ", len(uniform_analog_b))
 
-		activate_infra_1 = f.activate(uniform_infra_a)
-		activate_infra_0 = f.activate(uniform_infra_b)
+		activate_infra_1 = f.activate_infra(uniform_infra_a)
+		activate_infra_0 = f.activate_infra(uniform_infra_b)
 		
+		if processing:
+			I_inf,O_inf = f.count_infrared(activate_infra_0,activate_infra_1,delta)
 
 
-	if processing:
-		ins_a, out_a = f.count_entries(activation_p1a,activation_p0a,'A', activation_p1b, activation_p0b, activate_infra_0, activate_infra_1, delta, span, infrared_param)
-		ins_b, out_b = f.count_entries(activation_p1b,activation_p0b,'B', activation_p1a, activation_p0a, activate_infra_0, activate_infra_1, delta, span, infrared_param)
 
-	if processing:
-		I = max(ins_a, ins_b);
-		O = max(out_a, out_b);
+
 
 	#print ('################################\nEffective entries: ', I,'\nEffective Exits: ', O,'\n################################')
 	print("#")
-	return I, O
+
+	if use_pir and use_infra:				#opzione non contemplata
+		return I_pir, O_pir, I_inf, O_inf
+	elif use_pir:
+		return I_pir, O_pir, None, None
+	elif use_infra:
+		return None, None, I_inf, O_inf
+	else:
+		print("Nothing enabled: NO DATA.\n")
 	'''
 	data = open("all_data.txt", "a")
 	data.write('\n################################\nTimestamp: '+ datetime.datetime.now().strftime("%Y-%d-%m %H:%M:%S") +'\nEffective entries: '+str(I)+'\nEffective Exits: '+str(O)+'\n################################\n')

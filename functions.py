@@ -8,8 +8,9 @@ import getopt
 PACKET_LOSS = 30496000;
 
 
-
-
+'''
+function to decide which sensor to analize based on input parameters
+'''
 def parse_args():
 	try:
 		print(sys.argv[1:])
@@ -132,6 +133,16 @@ def activate(dat):
 	return list(act)
 
 '''
+build a list with all the 0-1 fronts
+'''
+def activate_infra(dat):
+	act = [];
+	for i in range(1, len(dat)):
+		if dat[i-1] == 0 and dat[i] == 1:
+			act.append(i)
+	return list(act)
+
+'''
 converte caratteri nelle liste in interi
 '''
 def convert_list_int(list):
@@ -188,32 +199,11 @@ def generate_mask (support,list0a,list0b,list1a,list1b):
     return list(mask)
 
 '''
-controlla la presenza/assenza di un possibile trenino di persone
-'''
-def check_train (begin, end, infra_0, infra_1, infrared_param):
-	count = 0
-	for j in infra_1:
-		if (j>begin and j<end):
-			count = count + 1
-	for k in infra_0:
-		if (k>begin and k<end):
-			count = count + 1
-	#print(count)
-	if count > infrared_param:
-		print(">>> Trenino")
-	else:
-		print(">>> No trenino")
-	if round((count-2)/2) > 0:
-		return round((count-2)/2)
-	else:
-		return 0
-
-'''
 Detect entries based on the difference of the changes of value
 of the PIRs.
 Computed for each side of the gate.
 '''
-def count_entries(front, back, side, other_side_front, other_side_back, infra_0, infra_1, delta, span, infrared_param):
+def count_entries(front, back, side, other_side_front, other_side_back, delta, span):
 	'''
 	if 'A' == side:
 		#print ("\n###########################\n>>> VERIFICA LATO A\n###########################\n")
@@ -235,10 +225,6 @@ def count_entries(front, back, side, other_side_front, other_side_back, infra_0,
 				one_down = front[i+1]
 
 				if zero_up > one_up:
-					if infra_0 is not None:
-						errors = check_train(one_up,zero_down,infra_0,infra_1, infrared_param)
-					else:
-						errors = 0
 					#print (">>> Sto entrando\n")
 					'''
 					Confronto i valori dei due sensori sullo stesso lato con l'intorno degli stessi sull'altro lato
@@ -247,42 +233,71 @@ def count_entries(front, back, side, other_side_front, other_side_back, infra_0,
 					if 'A' == side:
 						if matched_entries(zero_up, one_up, other_side_back, other_side_front, span) == 1:
 							#print (">>> !! LATO A: Valori trovati, confermo entrata !!\n")
-							#if errors != 0:
-								#print(errors," ingressi in più")
-							ins = ins + 1 + errors;
+							ins = ins + 1;
 
 					elif 'B' == side:
 						if matched_entries(zero_up, one_up, other_side_back, other_side_front, span) == 1:
 							#print (">>> !! LATO B: Valori trovati, confermo entrata !!\n")
-							#if errors != 0:
-								#print(errors," ingressi in più")
-							ins = ins + 1 + errors;
+							ins = ins + 1;
 
 				elif zero_up < one_up:
-					if infra_0 is not None:
-						errors = check_train(zero_up,one_down,infra_0,infra_1, infrared_param)
-					else:
-						errors = 0
 					#print(">>> Sto uscendo\n")
 
 					if 'A' == side:
 						if matched_entries(one_up, zero_up, other_side_front, other_side_back, span) == 1:
 							#print (">>> !! LATO A: Valori trovati, confermo uscita !!\n")
-							#if errors != 0:
-								#print(errors," uscite in più")
-							out = out + 1 + errors;
+							out = out + 1;
 
 					elif 'B' == side:
 						if matched_entries(one_up, zero_up, other_side_front, other_side_back, span) == 1:
 							#print (">>> !! LATO B: Valori trovati, confermo uscita !!\n")
-							#if errors != 0:
-								#print(errors," uscite in più")
-							out = out + 1 + errors;
+							out = out + 1;
 
 
 	print ('Side: ', side,' In: ', ins,' Out: ', out);
 	return ins, out
 
+'''
+count entries for infrared sensors
+'''
+def count_infrared(activate_infra_0,activate_infra_1,delta):
+	I=0
+	O=0
+	for i in activate_infra_1:
+		for j in activate_infra_0:
+			if j-i > 0 and j-i < delta:
+				I = I+1
+			if i-j > 0 and i-j < delta:
+				O = O+1
+
+	print ('Infrared:\tIn: ', I,' Out: ', O);
+
+	return I,O
+
+
 def signal_handler(signal, frame):
 	print("\n>>> Exit!")
 	sys.exit(0)
+
+
+''' BETA VERSION
+controlla la presenza/assenza di un possibile trenino di persone
+
+def check_train (begin, end, infra_0, infra_1, infrared_param):
+	count = 0
+	for j in infra_1:
+		if (j>begin and j<end):
+			count = count + 1
+	for k in infra_0:
+		if (k>begin and k<end):
+			count = count + 1
+	#print(count)
+	if count > infrared_param:
+		print(">>> Trenino")
+	else:
+		print(">>> No trenino")
+	if round((count-2)/2) > 0:
+		return round((count-2)/2)
+	else:
+		return 0
+'''
