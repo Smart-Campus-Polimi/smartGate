@@ -190,9 +190,9 @@ def just_processing(a, b, delta, var, use):
 	if use_pir and use_infra:				#opzione non contemplata
 		return I_pir, O_pir, I_inf, O_inf
 	elif use_pir:
-		return I_pir, O_pir, None, None
+		return I_pir, O_pir
 	elif use_infra:
-		return None, None, I_inf, O_inf
+		return I_inf, O_inf
 	else:
 		print("Nothing enabled: NO DATA.\n")
 	'''
