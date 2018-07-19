@@ -13,19 +13,21 @@ import getopt
 REAL_IN = 23
 REAL_OUT = 23
 actual_values = [REAL_IN, REAL_OUT]
-span = [600, 700, 800, 850,900]
+span = [600,1000]
 infrared_param = [4, 5, 7, 10, 12]
 enough_zero = [10, 15, 20, 25, 30]
-delta = [1000, 1200, 1400, 1600, 1800]
-delta_jump = 200
+delta = [1400, 2000]
+
+span_jump = 50
+delta_jump = 100
 
 ground_truth_date = "17_07"
 
 PATH = "/home/cluster/smartGate/"
 DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+".json"
 DATA_INPUT_B = PATH + "ground_truth/side_b_"+ground_truth_date+".json"
-OUTPUT_PATH = PATH+"output/"+ground_truth_date+'results.csv'
-OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+'partial.csv'
+OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_allParameters_results.csv'
+OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+'_allParameters_partial.csv'
 
 results = []
 
@@ -41,9 +43,9 @@ with open(DATA_INPUT_B) as side_b:
 
 en = 0
 ex = 0
-for s in span:
-#for s in range(span[0], span[-1], 50):
-	for d in range(delta[0], delta[-1], delta_jump):
+
+for s in range(span[0], span[1]+span_jump, span_jump):
+	for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 		en, ex = jp.just_processing(a, b, d, s, None, None, use)
 		temp = [] 
 		temp.append(en)
@@ -60,6 +62,6 @@ for s in span:
 		
 
 results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'span', 'delta'])
-#print(results_pd)
+print("Ho finito :)")
 results_pd.to_csv(OUTPUT_PATH, sep='\t')
 
