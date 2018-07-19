@@ -21,8 +21,8 @@ import csv
 import sys
 import getopt
 
-REAL_IN = 23
-REAL_OUT = 23
+REAL_IN = 21
+REAL_OUT = 17
 actual_values = [REAL_IN, REAL_OUT]
 
 
@@ -39,13 +39,13 @@ results = []
 
 use = parse_args()
 
-if use[0] == True:
+if use[1] == True:
 	var = [600,1000]
 	delta = [1400, 2000]
 	var_jump = 50
 	delta_jump = 100
 
-elif use[1] == True:
+elif use[0] == True:
 	var = [10, 25]
 	delta = [1400, 2000]
 	var_jump = 1
@@ -61,8 +61,9 @@ en = 0
 ex = 0
 
 
-for v in range(var[0], var[1]+var_jump, var_jump):
-	for d in range(delta[0], delta[1]+delta_jump, delta_jump):
+
+for d in range(delta[0], delta[1]+delta_jump, delta_jump):
+	for v in range(var[0], var[1]+var_jump, var_jump):
 		en, ex = jp.just_processing(a, b, d, v, use)
 		temp = [] 
 		temp.append(en)

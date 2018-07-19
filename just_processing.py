@@ -173,11 +173,11 @@ def just_processing(a, b, delta, var, use):
 			processing = False
 			return
 		#print("Lunghezza analog_b: ", len(uniform_analog_b))
-
 		activate_infra_1 = f.activate_infra(uniform_infra_a)
 		activate_infra_0 = f.activate_infra(uniform_infra_b)
 		
 		if processing:
+			#print("Processo infrarossi\tLunghezza act_1:",len(activate_infra_1),"\tLunghezza act_0:",len(activate_infra_0),"\n")
 			I_inf,O_inf = f.count_infrared(activate_infra_0,activate_infra_1,delta)
 
 
