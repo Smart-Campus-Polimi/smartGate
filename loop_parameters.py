@@ -61,7 +61,7 @@ en = 0
 ex = 0
 
 
-for v in range(span[0], var[1]+var_jump, var_jump):
+for v in range(var[0], var[1]+var_jump, var_jump):
 	for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 		en, ex = jp.just_processing(a, b, d, v, use)
 		temp = [] 
