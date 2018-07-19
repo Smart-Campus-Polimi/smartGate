@@ -26,7 +26,7 @@ REAL_OUT = 23
 actual_values = [REAL_IN, REAL_OUT]
 
 
-ground_truth_date = "17_07"
+ground_truth_date = "19_07"
 
 PATH = "/home/cluster/smartGate/"
 DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+".json"
