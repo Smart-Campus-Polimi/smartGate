@@ -38,14 +38,17 @@ results = []
 
 
 use = parse_args()
+PIR = use[1]
+INFRA = use[0]
 
-if use[1] == True:
+if PIR == True:
 	var = [600,1000]
 	delta = [1400, 2000]
 	var_jump = 50
 	delta_jump = 100
 
-elif use[0] == True:
+elif INFRA == True:
+	#enough_zero = var?
 	var = [10, 25]
 	delta = [1400, 2000]
 	var_jump = 1
@@ -79,11 +82,11 @@ for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 			writer.writerow(temp) 
 		
 
-if use[0]:
+if INFRA:
 	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'span', 'delta'])
 	print("Ho finito :)")
 	results_pd.to_csv(OUTPUT_PATH, sep='\t')
-elif use[1]:
+elif PIR:
 	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'enough_zero', 'delta'])
 	print("Ho finito :)")
 	results_pd.to_csv(OUTPUT_PATH, sep='\t')

@@ -260,7 +260,7 @@ def count_entries(front, back, side, other_side_front, other_side_back, delta, s
 '''
 count entries for infrared sensors
 '''
-def count_infrared(activate_infra_0,activate_infra_1,delta):
+def count_infrared(activate_infra_0, activate_infra_1, delta):
 	I=0
 	O=0
 	for i in activate_infra_1:
