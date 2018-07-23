@@ -28,7 +28,7 @@ actual_values = [REAL_IN, REAL_OUT]
 
 ground_truth_date = "23_07"
 
-PATH = "/home/daniubo/Scrivania/smartGate/"
+PATH = "/home/cluster/smartGate/"
 DATA_INPUT_A = PATH + "ground_truth/side_a_1h_"+ground_truth_date+".json"
 DATA_INPUT_B = PATH + "ground_truth/side_b_1h_"+ground_truth_date+".json"
 OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_5min_fixedparameters_results.csv'
