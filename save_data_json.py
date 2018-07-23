@@ -133,9 +133,9 @@ class Processer_thread(threading.Thread):
 		#print (list_of_dict_b)
 		print (">>> Thread processing started...")
 		with lock:
-			with open("side_b_18_07.json","a") as side_b:
+			with open("side_b_1h_23_07.json","a") as side_b:
 				json.dump(list_of_dict_b, side_b)
-			with open("side_a_18_07.json","a") as side_a:
+			with open("side_a_1h_23_07.json","a") as side_a:
 				json.dump(list_of_dict_a, side_a)
 		'''
 		a = copy.deepcopy(list_of_dict_a)

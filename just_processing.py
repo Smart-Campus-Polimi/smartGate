@@ -99,17 +99,11 @@ def just_processing(a, b, delta, var, use):
 	min_ts_side = min(min_ts_a, min_ts_b)
 	max_ts_side = max(max_ts_a, max_ts_b)
 
-
 	#interval = int(max_ts-min_ts)
 	array_support = []
 	for i in range(0,interval):
 	    array_support.append(0);
 	#print("Lunghezza supporto: ", len(array_support))
-	if use_infra:
-		infrared_a = f.processing_infrared(infrared_a, var)
-		infrared_b = f.processing_infrared(infrared_b, var)
-		analog_a = f.convert_list_int(analog_a)
-		analog_b = f.convert_list_int(analog_b)
 
 	processing = True
 
@@ -152,7 +146,12 @@ def just_processing(a, b, delta, var, use):
 			O_pir= max(out_a, out_b);
 
 
-	if use_infra:
+	if use_infra:		
+		activate_infra_1 = f.processing_infrared_2(infrared_a, var)
+		activate_infra_0 = f.processing_infrared_2(infrared_b, var)
+		analog_a = f.convert_list_int(analog_a)
+		analog_b = f.convert_list_int(analog_b)
+
 		uniform_infra_a = f.uniform_list(array_support,infrared_a,min_ts_a,max_ts_a,min_ts,max_ts)
 		if (not uniform_infra_a):
 			processing = False
@@ -173,8 +172,8 @@ def just_processing(a, b, delta, var, use):
 			processing = False
 			return
 		#print("Lunghezza analog_b: ", len(uniform_analog_b))
-		activate_infra_1 = f.activate_infra(uniform_infra_a)
-		activate_infra_0 = f.activate_infra(uniform_infra_b)
+		#activate_infra_1 = f.activate_infra(uniform_infra_a)
+		#activate_infra_0 = f.activate_infra(uniform_infra_b)
 		
 		if processing:
 			#print("Processo infrarossi\tLunghezza act_1:",len(activate_infra_1),"\tLunghezza act_0:",len(activate_infra_0),"\n")

@@ -21,18 +21,18 @@ import csv
 import sys
 import getopt
 
-REAL_IN = 21
-REAL_OUT = 17
+REAL_IN = 17
+REAL_OUT = 13
 actual_values = [REAL_IN, REAL_OUT]
 
 
-ground_truth_date = "19_07"
+ground_truth_date = "23_07"
 
-PATH = "/home/cluster/smartGate/"
-DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+".json"
-DATA_INPUT_B = PATH + "ground_truth/side_b_"+ground_truth_date+".json"
-OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_allParameters_results.csv'
-OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+'_allParameters_partial.csv'
+PATH = "/home/daniubo/Scrivania/smartGate/"
+DATA_INPUT_A = PATH + "ground_truth/side_a_1h_"+ground_truth_date+".json"
+DATA_INPUT_B = PATH + "ground_truth/side_b_1h_"+ground_truth_date+".json"
+OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_5min_fixedparameters_results.csv'
+OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+'_5min_fixedparameters_partial.csv'
 
 results = []
 
@@ -49,7 +49,7 @@ if PIR == True:
 
 elif INFRA == True:
 	#enough_zero = var?
-	var = [10, 25]
+	var = [15, 25]
 	delta = [1400, 2000]
 	var_jump = 1
 	delta_jump = 100
@@ -62,7 +62,6 @@ with open(DATA_INPUT_B) as side_b:
 
 en = 0
 ex = 0
-
 
 
 for d in range(delta[0], delta[1]+delta_jump, delta_jump):
@@ -83,10 +82,10 @@ for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 		
 
 if INFRA:
-	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'span', 'delta'])
+	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'enough_zero', 'delta'])
 	print("Ho finito :)")
 	results_pd.to_csv(OUTPUT_PATH, sep='\t')
 elif PIR:
-	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'enough_zero', 'delta'])
+	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'span', 'delta'])
 	print("Ho finito :)")
 	results_pd.to_csv(OUTPUT_PATH, sep='\t')

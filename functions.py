@@ -66,7 +66,6 @@ def building_time(data, interval):
 
 '''
 processing of the infrareds waveform
-'''
 def processing_infrared(infrared, enough_zero):
 	index_list = [];
 	for i in range(0,len(infrared)):
@@ -87,6 +86,30 @@ def processing_infrared(infrared, enough_zero):
 			i[1] = 0
 
 	return infrared
+'''
+
+'''
+BETA VERSION: alternative way to build a list of activation for infrared samples
+'''
+def processing_infrared_2(infrared, enough_zero):
+	index_list = []
+	len_infra = len(infrared)-1
+	for i in range(0,len(infrared)):
+		count = 0
+		j = 0
+		if infrared[i][1] == 1 and i+1<len_infra:
+			j = i
+			while infrared[j+1][1] == 0:
+				count += 1
+				if j+1<len_infra:
+					j += 1
+				else: 
+					break
+			if count > enough_zero:
+				index_list.append(infrared[i][0])
+	#print("Lista:", index_list)
+	return list(index_list)
+
 
 '''
 Function to detect matched entries between the two side of the gate.
@@ -180,8 +203,6 @@ def uniform_list(support, samples_list, min_ts_side, max_ts_side,global_min_ts,g
 				print("Happened at time: ",datetime.datetime.now().strftime("%Y-%d-%m %H:%M:%S"))
 				return False
 		sum_samples = sum_samples + samples
-    #print(i,"sum_sample",sum_samples,len(lista),"##",sum_samples-samples,"##",samples)
-    #print ("########",i)
     #print("How much zeros at the end: ", max_ts-max_ts_side)
 	if max_ts_side < global_max_ts:
 		for k in range (max_ts_side,global_max_ts-max_ts_side):
@@ -263,13 +284,30 @@ count entries for infrared sensors
 def count_infrared(activate_infra_0, activate_infra_1, delta):
 	I=0
 	O=0
+	found = False
+	for a1 in activate_infra_1:
+		found = False
+		for a0 in activate_infra_0:
+			if a1>a0 and a1-a0<delta and not found:
+				O += 1
+				found = True
+	for a1 in activate_infra_1:
+		found = False
+		for a0 in activate_infra_0:
+			if a0>a1 and a0-a1<delta and not found:
+				I += 1
+				found = True
+	'''
 	for i in activate_infra_1:
+		found = False
 		for j in activate_infra_0:
-			if j-i > 0 and j-i < delta:
+			if j-i > 0 and j-i < delta and not found:
 				I = I+1
-			if i-j > 0 and i-j < delta:
+				found = True
+			if i-j > 0 and i-j < delta and not found:
 				O = O+1
-
+				found = True
+	'''
 	print ('Infrared:\tIn: ', I,' Out: ', O);
 
 	return I,O
