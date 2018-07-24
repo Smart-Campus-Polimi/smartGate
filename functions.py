@@ -14,14 +14,14 @@ function to decide which sensor to analize based on input parameters
 def parse_args():
 	try:
 		print(sys.argv[1:])
-		opts, args = getopt.getopt(sys.argv[1:], "ip", ["infra=", "pir="])
+		opts, args = getopt.getopt(sys.argv[1:], "ipc", ["infra=", "pir=", "camera="])
 	except getopt.GetoptError as e:
 		print(e)
 		sys.exit(0)
 
 	i = False
 	p = False
-
+	c = False
 
 	for o,a in opts:
 		if o == "-i":
@@ -30,10 +30,13 @@ def parse_args():
 		elif o == "-p":
 			p = True
 			print("pir enabled")
+		elif o == "-c":
+			c = True
+			print("camera enabled")
 		else:
 			assert False, "unhandled option"
 
-	return [i,p]
+	return [i,p,c]
 
 
 '''
@@ -297,17 +300,6 @@ def count_infrared(activate_infra_0, activate_infra_1, delta):
 			if a0>a1 and a0-a1<delta and not found:
 				I += 1
 				found = True
-	'''
-	for i in activate_infra_1:
-		found = False
-		for j in activate_infra_0:
-			if j-i > 0 and j-i < delta and not found:
-				I = I+1
-				found = True
-			if i-j > 0 and i-j < delta and not found:
-				O = O+1
-				found = True
-	'''
 	print ('Infrared:\tIn: ', I,' Out: ', O);
 
 	return I,O

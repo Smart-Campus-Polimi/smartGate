@@ -7,6 +7,10 @@ o = 23
 - ora: 14
 i = 21 (+/-2)
 o = 17 (+/-2)
+
+>>> 23-07
+i = 17
+o = 13
 '''
 
 import just_processing as jp

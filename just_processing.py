@@ -8,10 +8,11 @@ import getopt
 import sys
 
 
-def just_processing(a, b, delta, var, use):
+def just_processing(a, b, c, delta, var, use):
 	use_infra = use[0]
 	use_pir = use[1]
-	#use_anal = use[2]
+	use_camera = use[2]
+	#use_anal = use[3]
 	
 	'''
 	with open('side_a.json') as side_a:
@@ -38,6 +39,18 @@ def just_processing(a, b, delta, var, use):
 	p1b_temp = []
 	infrared_temp_b = []
 	analog_temp_b = []
+
+	if use_camera:
+
+		in_people = 0
+		out_people = 0
+		timestamp_list = []
+		for packet in c:
+			in_people = in_people + packet['In']
+			out_people = out_people + packet['Out']
+			timestamp_list.append(packet['Timestamp'])
+		print("Camera:\tIn:", in_people, "\tOut: ", out_people)	
+		
 
 	for packet in a:
 		p0a_temp = packet['P0A']
@@ -192,6 +205,9 @@ def just_processing(a, b, delta, var, use):
 		return I_pir, O_pir
 	elif use_infra:
 		return I_inf, O_inf
+	elif use_camera:
+		print("Nothing to return, camera data processed.\n")
+		return 1
 	else:
 		print("Nothing enabled: NO DATA.\n")
 	'''

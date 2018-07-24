@@ -16,6 +16,7 @@ import datetime
 from copy import deepcopy
 import functions as f
 import MySQLdb
+import just_processing
 
 PACKET_LOSS = 30496000;
 BROKER_ADDRESS = "10.79.1.176"
@@ -39,10 +40,13 @@ count_b = 0
 
 topic_sensors_a = "smartgate/sg1/mls/sa"
 topic_sensors_b = "smartgate/sg1/mls/sb"
+topic_camera = "smartgate/sg1/mlc/c"
 list_of_dict_a = []
 list_of_dict_b = []
+list_of_dict_c = []
 dict_a = {}
 dict_b = {}
+dict_c = {}
 lock = Lock()
 
 def on_message(client, userdata, message):
@@ -68,6 +72,16 @@ def on_message(client, userdata, message):
 				with lock:
 					dict_b.update(json.loads(str(message.payload.decode("utf-8"))));
 					list_of_dict_b.append(copy.deepcopy(dict_b))
+			except ValueError as e:
+				print(">>> Errore decodifica: ", e)
+				#print("Contenuto pacchetto:\n", str(message.payload.decode("utf-8")))
+		elif message.topic == topic_camera:
+			#print ("Message received on topic: ", topic_sensors_b)
+			print("c",  end="", flush=True)
+			try:
+				with lock:
+					dict_c.update(json.loads(str(message.payload.decode("utf-8"))));
+					list_of_dict_c.append(copy.deepcopy(dict_b))
 			except ValueError as e:
 				print(">>> Errore decodifica: ", e)
 				#print("Contenuto pacchetto:\n", str(message.payload.decode("utf-8")))
@@ -133,9 +147,11 @@ class Processer_thread(threading.Thread):
 				json.dump(list_of_dict_b, side_b)
 			with open("side_a.json","w") as side_a:
 				json.dump(list_of_dict_a, side_a)
+			with open("camera.json","w") as cam:
+				json.dump(list_of_dict_c, cam)
 
 
-		print("\n\n--------\n\nlenght of dict a", len(list_of_dict_a))
+		#print("\n\n--------\n\nlenght of dict a", len(list_of_dict_a))
 		'''
 		a = copy.deepcopy(list_of_dict_a)
 		b = copy.deepcopy(list_of_dict_b)
@@ -148,6 +164,9 @@ class Processer_thread(threading.Thread):
 
 		with open('side_b.json') as side_b:
 			b = json.load(side_b)
+		
+		with open('camera.json') as cam:
+			c = json.load(cam)
 
 
 		'''
@@ -358,50 +377,6 @@ class Processer_thread(threading.Thread):
 			data.close()
 		#query = "INSERT INTO smartgateDB_real.flux_giorno (TimeStamp, Gate, Inside, Outside) VALUES ('"+datetime.datetime.now().strftime("%Y-%d-%m %H:%M:%S")+"', '0', '"+str(I)+"', '"+str(O)+"')"
 		#cursor.execute(query)
-
-		'''
-		plt.plot(*zip(*p0b), color='green');
-		plt.plot(*zip(*p1b), color='orange');
-		plt.ylim(-0.2, 1.2)
-		green_pir = mlines.Line2D([], [], color='green', label='P0B')
-		orange_pir = mlines.Line2D([], [], color='orange', label='P1B')
-		plt.legend(handles=[green_pir, orange_pir])
-		plt.title("Pir b-side")
-		plt.show();
-
-		plt.plot(*zip(*windowed_analog), color='blue');
-		blue_an = mlines.Line2D([], [], color='blue', label='Analog');
-		plt.yticks(np.arange(0, 1024, 50))
-		plt.legend(handles=[blue_an])
-		plt.title("Analog")
-		plt.show();
-
-		plt.plot(*zip(*p0a), color='green');
-		plt.plot(*zip(*p1a), color='orange');
-		plt.ylim(-0.2, 1.2)
-		green_pir = mlines.Line2D([], [], color='green', label='P0A')
-		orange_pir = mlines.Line2D([], [], color='orange', label='P1A')
-		plt.legend(handles=[green_pir, orange_pir])
-		plt.title("Pir a-side")
-		plt.show();
-
-		plt.plot(*zip(*infrared), color='blue');
-		blue_an = mlines.Line2D([], [], color='blue', label='Infrared');
-		plt.legend(handles=[blue_an])
-		plt.show();
-
-		plt.plot(*zip(*p0b), color='green');
-		plt.plot(*zip(*p1b), color='orange');
-		plt.plot(*zip(*p0a), color='red');
-		plt.plot(*zip(*p1a), color='blue');
-		plt.ylim(-0.2, 1.2)
-		green_pir = mlines.Line2D([], [], color='green', label='P0B')
-		orange_pir = mlines.Line2D([], [], color='orange', label='P1B')
-		red_pir = mlines.Line2D([], [], color='red', label='P0A')
-		blue_pir = mlines.Line2D([], [], color='blue', label='P1A')
-		plt.legend(handles=[green_pir, orange_pir, red_pir, blue_pir])
-		plt.show()
-		'''
 
 		return
 
