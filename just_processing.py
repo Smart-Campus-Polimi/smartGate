@@ -12,6 +12,8 @@ def just_processing(a, b, c, delta, var, use):
 	use_infra = use[0]
 	use_pir = use[1]
 	use_camera = use[2]
+	span = var[0]
+	enough_zero = var[1]
 	#use_anal = use[3]
 	
 	'''
@@ -151,8 +153,8 @@ def just_processing(a, b, c, delta, var, use):
 
 		#activation_mask = f.activate(pir_mask)
 		if processing:
-			ins_a, out_a = f.count_entries(activation_p1a,activation_p0a,'A', activation_p1b, activation_p0b, delta, var)
-			ins_b, out_b = f.count_entries(activation_p1b,activation_p0b,'B', activation_p1a, activation_p0a, delta, var)
+			ins_a, out_a = f.count_entries(activation_p1a,activation_p0a,'A', activation_p1b, activation_p0b, delta, span)
+			ins_b, out_b = f.count_entries(activation_p1b,activation_p0b,'B', activation_p1a, activation_p0a, delta, span)
 		
 		if processing:
 			I_pir = max(ins_a, ins_b);
@@ -160,8 +162,8 @@ def just_processing(a, b, c, delta, var, use):
 
 
 	if use_infra:		
-		activate_infra_1 = f.processing_infrared_2(infrared_a, var)
-		activate_infra_0 = f.processing_infrared_2(infrared_b, var)
+		activate_infra_1 = f.processing_infrared_2(infrared_a, enough_zero)
+		activate_infra_0 = f.processing_infrared_2(infrared_b, enough_zero)
 		analog_a = f.convert_list_int(analog_a)
 		analog_b = f.convert_list_int(analog_b)
 

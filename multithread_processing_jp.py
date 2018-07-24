@@ -55,7 +55,9 @@ lock = Lock()
 
 use = parse_args()
 delta = 1800 #standard value temporary
-var = 900 #standard value temporary
+var = []
+var.append(900) #standard value temporary
+var.append(20)
 
 def on_message(client, userdata, message):
 		#print("message received, topic: ", message.topic)
@@ -97,22 +99,6 @@ def on_message(client, userdata, message):
 				#print("Contenuto pacchetto:\n", str(message.payload.decode("utf-8")))
 		else:
 			print(">>> Errore\n")
-
-
-
-
-
-'''
-masking analog pir values with digital pir values
-'''
-'''
-def extrapolate_analog(data, activator0, activator1):
-	windowed_analog = data
-	for i in range(0, len(data)):
-		flag = int(activator0[i][1]) or int(activator1[i][1]);
-		windowed_analog[i][1] = int(data[i][1]) * flag
-	return windowed_analog
-'''
 
 
 
