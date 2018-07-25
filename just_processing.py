@@ -8,7 +8,7 @@ import getopt
 import sys
 
 
-def just_processing(a, b, c, delta, var, use):
+def just_processing(a, b, delta, var, use):
 	use_infra = use[0]
 	use_pir = use[1]
 	use_camera = use[2]

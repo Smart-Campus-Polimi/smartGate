@@ -11,6 +11,11 @@ o = 17 (+/-2)
 >>> 23-07
 i = 17
 o = 13
+
+>>> 24-07
+i = 17			i = 9		i = 11		i = 8
+o = 18			o = 14		o = 10		o = 9
+SECONDO NON PULITO
 '''
 
 import just_processing as jp
@@ -25,18 +30,18 @@ import csv
 import sys
 import getopt
 
-REAL_IN = 17
-REAL_OUT = 13
+REAL_IN = 
+REAL_OUT = 
 actual_values = [REAL_IN, REAL_OUT]
 
 
-ground_truth_date = "23_07"
+ground_truth_date = "24_07"
 
 PATH = "/home/cluster/smartGate/"
-DATA_INPUT_A = PATH + "ground_truth/side_a_1h_"+ground_truth_date+".json"
-DATA_INPUT_B = PATH + "ground_truth/side_b_1h_"+ground_truth_date+".json"
-OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_1h_pir_results.csv'
-OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+'_1h_pir_partial.csv'
+DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+"_part1.json"
+DATA_INPUT_B = PATH + "ground_truth/side_b_"+ground_truth_date+"_part1.json"
+OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_30mpart1_pir_results.csv'
+OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+'_30mpart1_pir_partial.csv'
 
 results = []
 
@@ -46,17 +51,17 @@ PIR = use[1]
 INFRA = use[0]
 
 if PIR == True:
-	var = [600,1000]
-	delta = [1400, 2000]
+	var = [600,1100]
+	delta = [1600, 2000]
 	var_jump = 50
-	delta_jump = 100
+	delta_jump =  50
 
 elif INFRA == True:
 	#enough_zero = var?
 	var = [15, 25]
 	delta = [1400, 2000]
 	var_jump = 1
-	delta_jump = 100
+	delta_jump = 50
 
 
 with open(DATA_INPUT_A) as side_a:
