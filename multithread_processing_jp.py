@@ -57,7 +57,7 @@ use = parse_args()
 delta = 1600 #standard value temporary
 var = []
 var.append(900) #standard value temporary
-var.append(30)
+var.append()
 
 def on_message(client, userdata, message):
 		#print("message received, topic: ", message.topic)
@@ -124,10 +124,10 @@ class Subscriber_thread(threading.Thread):
 		subscriber.subscribe(self.topic_sensors_a);
 		print(">>> Subscribed!\n")
 		print (">>> Subscribing to topic:", self.topic_sensors_b);
-		print(">>> Subscribed!\n") 
+		print(">>> Subscribed!\n")
 		subscriber.subscribe(self.topic_sensors_b);
 		print (">>> Subscribing to topic:", self.topic_camera);
-		print(">>> Subscribed!\n") 
+		print(">>> Subscribed!\n")
 		subscriber.subscribe(self.topic_camera);
 		subscriber.loop_forever()
 
@@ -165,7 +165,7 @@ class Processer_thread(threading.Thread):
 
 		with open('side_b.json') as side_b:
 			b = json.load(side_b)
-		
+
 		with open('camera.json') as cam:
 			c = json.load(cam)
 
