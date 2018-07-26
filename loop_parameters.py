@@ -39,10 +39,10 @@ ground_truth_date = "26_07"
 
 #PATH = "/home/cluster/smartGate/"
 PATH = "/home/daniubo/Scrivania/smartGate/"
-DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+"_part1.json"
-DATA_INPUT_B = PATH + "ground_truth/side_b_"+ground_truth_date+"_part1.json"
-OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_30mpart1_inf_results.csv'
-OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+'_30mpart1_inf_partial.csv'
+DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+"_part2.json"
+DATA_INPUT_B = PATH + "ground_truth/side_b_"+ground_truth_date+"_part2.json"
+OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_30mpart2_inf_results.csv'
+OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+'_30mpart2_inf_partial.csv'
 
 results = []
 
