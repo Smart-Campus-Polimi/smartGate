@@ -40,8 +40,8 @@ ground_truth_date = "26_07"
 #PATH = "/home/cluster/smartGate/"
 #PATH = "/home/daniubo/Scrivania/smartGate/"
 PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
-DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+"_part2.json"
-DATA_INPUT_B = PATH + "ground_truth/side_b_"+ground_truth_date+"_part2.json"
+DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+"_part3.json"
+DATA_INPUT_B = PATH + "ground_truth/side_b_"+ground_truth_date+"_part3.json"
 OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_30mpart2_inf_results.csv'
 OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+'_30mpart2_inf_partial.csv'
 
@@ -53,15 +53,15 @@ PIR = use[1]
 INFRA = use[0]
 
 if PIR == True:
-	var = [600,1100]
-	delta = [1600, 2000]
+	var = [800,1200]
+	delta = [1200, 1700]
 	var_jump = 50
 	delta_jump =  50
 
 elif INFRA == True:
 	#enough_zero = var?
-	var = [15, 25]
-	delta = [1400, 2000]
+	var = [24,30]
+	delta = [1200, 1600]
 	var_jump = 1
 	delta_jump = 50
 
