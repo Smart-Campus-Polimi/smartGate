@@ -16,6 +16,10 @@ o = 13
 i = 17			i = 9		i = 11		i = 8
 o = 18			o = 14		o = 10		o = 9
 SECONDO NON PULITO
+
+>>> 26-07
+i = 5			i = 12		i = 12		i = 9+sedia
+o = 5			o = 10		o = 10		o = 10
 '''
 
 import just_processing as jp
