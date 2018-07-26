@@ -30,15 +30,16 @@ import csv
 import sys
 import getopt
 
-REAL_IN = 5
-REAL_OUT = 5
+REAL_IN = 12
+REAL_OUT = 10
 actual_values = [REAL_IN, REAL_OUT]
 
 
 ground_truth_date = "26_07"
 
 #PATH = "/home/cluster/smartGate/"
-PATH = "/home/daniubo/Scrivania/smartGate/"
+#PATH = "/home/daniubo/Scrivania/smartGate/"
+PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+"_part2.json"
 DATA_INPUT_B = PATH + "ground_truth/side_b_"+ground_truth_date+"_part2.json"
 OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_30mpart2_inf_results.csv'
@@ -77,7 +78,7 @@ ex = 0
 for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 	for v in range(var[0], var[1]+var_jump, var_jump):
 		en, ex = jp.just_processing(a, b, d, v, use)
-		temp = [] 
+		temp = []
 		temp.append(en)
 		temp.append(ex)
 		pred = [en, ex]
@@ -88,8 +89,8 @@ for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 		results.append(temp)
 		with open(OUTPUT_PATH_PARTIAL, 'a') as partial:
 			writer = csv.writer(partial, delimiter=';')
-			writer.writerow(temp) 
-		
+			writer.writerow(temp)
+
 
 if INFRA:
 	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'enough_zero', 'delta'])
