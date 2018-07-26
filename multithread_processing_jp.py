@@ -54,10 +54,10 @@ dict_c = {}
 lock = Lock()
 
 use = parse_args()
-delta = 1800 #standard value temporary
+delta = 1600 #standard value temporary
 var = []
 var.append(900) #standard value temporary
-var.append(20)
+var.append(30)
 
 def on_message(client, userdata, message):
 		#print("message received, topic: ", message.topic)

@@ -12,8 +12,8 @@ def just_processing(a, b, delta, var, use):
 	use_infra = use[0]
 	use_pir = use[1]
 	use_camera = use[2]
-	span = var #var[0]
-	enough_zero = var #var[1]
+	span = var
+	enough_zero = var
 	#use_anal = use[3]
 	
 	'''

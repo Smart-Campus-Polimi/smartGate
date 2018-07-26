@@ -30,14 +30,15 @@ import csv
 import sys
 import getopt
 
-REAL_IN = 17
-REAL_OUT = 18
+REAL_IN = 5
+REAL_OUT = 5
 actual_values = [REAL_IN, REAL_OUT]
 
 
-ground_truth_date = "24_07"
+ground_truth_date = "26_07"
 
-PATH = "/home/cluster/smartGate/"
+#PATH = "/home/cluster/smartGate/"
+PATH = "/home/daniubo/Scrivania/smartGate/"
 DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+"_part1.json"
 DATA_INPUT_B = PATH + "ground_truth/side_b_"+ground_truth_date+"_part1.json"
 OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_30mpart1_inf_results.csv'
