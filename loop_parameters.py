@@ -64,7 +64,7 @@ if PIR == True:
 
 elif INFRA == True:
 	#enough_zero = var?
-	var = [24,30]
+	var = [25,33]
 	delta = [1200, 1600]
 	var_jump = 1
 	delta_jump = 50
