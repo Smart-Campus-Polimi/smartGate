@@ -41,9 +41,9 @@ actual_values = [REAL_IN, REAL_OUT]
 
 ground_truth_date = "26_07"
 
-#PATH = "/home/cluster/smartGate/"
+PATH = "/home/cluster/smartGate/"
 #PATH = "/home/daniubo/Scrivania/smartGate/"
-PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+"_part3.json"
 DATA_INPUT_B = PATH + "ground_truth/side_b_"+ground_truth_date+"_part3.json"
 OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_30mpart3_inf_results.csv'
