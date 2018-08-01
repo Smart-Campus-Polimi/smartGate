@@ -1,0 +1,2 @@
+HC7Segment	KEYWORD1
+vDisplay_Number	KEYWORD2
