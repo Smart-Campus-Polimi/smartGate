@@ -18,8 +18,8 @@ o = 18			o = 14		o = 10		o = 9
 SECONDO NON PULITO
 
 >>> 26-07
-i = 5			i = 12		i = 12		i = 9+sedia
-o = 5			o = 10		o = 10		o = 10
+i = 5			i = 12		i = 12		i = 9+sedia		i = 4		i = 18	
+o = 5			o = 10		o = 10		o = 10			o = 7		o = 17
 '''
 
 import just_processing as jp
@@ -34,20 +34,24 @@ import csv
 import sys
 import getopt
 
-REAL_IN = 12
-REAL_OUT = 10
+REAL_IN = 2
+REAL_OUT = 2
 actual_values = [REAL_IN, REAL_OUT]
 
 
-ground_truth_date = "26_07"
+ground_truth_date = "30_07"
+ground_truth_time = "15_47"
 
 #PATH = "/home/cluster/smartGate/"
-#PATH = "/home/daniubo/Scrivania/smartGate/"
-PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
-DATA_INPUT_A = PATH + "ground_truth/side_a_"+ground_truth_date+"_part3.json"
-DATA_INPUT_B = PATH + "ground_truth/side_b_"+ground_truth_date+"_part3.json"
-OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_30mpart3_pir_results.csv'
-OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+'_30mpart3_pir_partial.csv'
+PATH = "/home/daniubo/Scrivania/smartGate/"
+#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+#DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_date+"_part6.json"
+#DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_date+"_part6.json"
+DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_time+".json"
+DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_time+".json"
+
+OUTPUT_PATH = PATH+"output/"+ground_truth_date+'_'+ground_truth_time'/'+ground_truth_time+'_inf_results.csv'
+OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+'_'+ground_truth_time'/'+ground_truth_time+'_inf_partials.csv'
 
 results = []
 
@@ -57,15 +61,15 @@ PIR = use[1]
 INFRA = use[0]
 
 if PIR == True:
-	var = [800,1200]
-	delta = [1200, 1700]
+	var = [700,1200]
+	delta = [1200, 1900]
 	var_jump = 50
 	delta_jump =  50
 
 elif INFRA == True:
 	#enough_zero = var?
-	var = [25,33]
-	delta = [1200, 1600]
+	var = [20,33]
+	delta = [1200, 1900]
 	var_jump = 1
 	delta_jump = 50
 
@@ -78,7 +82,6 @@ with open(DATA_INPUT_B) as side_b:
 en = 0
 ex = 0
 
-
 for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 	for v in range(var[0], var[1]+var_jump, var_jump):
 		en, ex = jp.just_processing(a, b, d, v, use)
@@ -88,6 +91,16 @@ for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 		pred = [en, ex]
 		temp.append("%.2f" % sqrt(mean_squared_error(actual_values, pred)))
 		temp.append("%.2f" % mean_absolute_error(actual_values, pred))
+		if en > actual_values[0]:
+			acc_in = (actual_values[0]/en)*100
+		else:
+			acc_in = (en/actual_values[0])*100
+		if ex > actual_values[1]:
+			acc_out = (actual_values[1]/en)*100
+		else:
+			acc_out = (en/actual_values[0])*100
+		temp.append("%.2f" % acc_in)
+		temp.append("%.2f" % acc_out)
 		temp.append(v)
 		temp.append(d)
 		results.append(temp)
@@ -97,10 +110,10 @@ for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 
 
 if INFRA:
-	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'enough_zero', 'delta'])
+	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'ACC. IN', 'ACC. OUT', 'enough_zero', 'delta'])
 	print("Ho finito :)")
 	results_pd.to_csv(OUTPUT_PATH, sep='\t')
 elif PIR:
-	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'span', 'delta'])
+	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'ACC. IN', 'ACC. OUT', 'span', 'delta'])
 	print("Ho finito :)")
 	results_pd.to_csv(OUTPUT_PATH, sep='\t')
