@@ -12,6 +12,7 @@ def just_processing(a, b, delta, var, use):
 	use_infra = use[0]
 	use_pir = use[1]
 	use_camera = use[2]
+	do_graph = use[3]
 	span = var
 	enough_zero = var
 	#use_anal = use[3]
@@ -160,6 +161,20 @@ def just_processing(a, b, delta, var, use):
 			I_pir = max(ins_a, ins_b);
 			O_pir= max(out_a, out_b);
 
+		if do_graph:
+			#print("Qui aggiungere codice per grafici")
+			plt.plot(uniform_p0a, color='green')
+			plt.plot(uniform_p0b, color='orange')
+			plt.plot(uniform_p1a, color='blue')
+			plt.plot(uniform_p1b, color='red')
+			plt.ylim(-0.2, 1.2)
+			green_pir = mlines.Line2D([],[],color='green', label='p0a')
+			orange_pir = mlines.Line2D([],[],color='orange', label='p0b')
+			blue_pir = mlines.Line2D([],[],color='blue', label='p1a')
+			red_pir = mlines.Line2D([],[],color='red', label='p1b')
+			plt.legend(handles=[green_pir, orange_pir, blue_pir, red_pir])
+			plt.title("Uniformed PIR")
+			plt.show()
 
 	if use_infra:		
 		activate_infra_1 = f.processing_infrared_2(infrared_a, enough_zero)
@@ -194,6 +209,13 @@ def just_processing(a, b, delta, var, use):
 			#print("Processo infrarossi\tLunghezza act_1:",len(activate_infra_1),"\tLunghezza act_0:",len(activate_infra_0),"\n")
 			I_inf,O_inf = f.count_infrared(activate_infra_0,activate_infra_1,delta)
 
+		if do_graph:
+			plt.plot(uniform_infra_a, color='green')
+			green_inf = mlines.Line2D([], [], color='green', label='inf_a')
+			plt.legend(handles=[green_inf])
+			plt.title("Infrared a")
+			plt.show();
+	
 
 
 
@@ -209,6 +231,9 @@ def just_processing(a, b, delta, var, use):
 		return I_inf, O_inf
 	elif use_camera:
 		print("Nothing to return, camera data processed.\n")
+		return 1
+	elif do_graph:
+		print("Nothing to return, graphs done.\n")
 		return 1
 	else:
 		print("Nothing enabled: NO DATA.\n")

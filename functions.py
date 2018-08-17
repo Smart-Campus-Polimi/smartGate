@@ -14,7 +14,7 @@ function to decide which sensor to analize based on input parameters
 def parse_args():
 	try:
 		print(sys.argv[1:])
-		opts, args = getopt.getopt(sys.argv[1:], "ipc", ["infra=", "pir=", "camera="])
+		opts, args = getopt.getopt(sys.argv[1:], "ipcg", ["infra=", "pir=", "camera=", "graph="])
 	except getopt.GetoptError as e:
 		print(e)
 		sys.exit(0)
@@ -22,6 +22,7 @@ def parse_args():
 	i = False
 	p = False
 	c = False
+	g = False
 
 	for o,a in opts:
 		if o == "-i":
@@ -33,10 +34,13 @@ def parse_args():
 		elif o == "-c":
 			c = True
 			print("camera enabled")
+		elif o == "-g":
+			g = True
+			print("graph enabled")
 		else:
 			assert False, "unhandled option"
 
-	return [i,p,c]
+	return [i,p,c,g]
 
 
 '''

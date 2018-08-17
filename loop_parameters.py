@@ -34,13 +34,13 @@ import csv
 import sys
 import getopt
 
-REAL_IN = 1
-REAL_OUT = 2
+REAL_IN = 8
+REAL_OUT = 11
 actual_values = [REAL_IN, REAL_OUT]
 
 
 ground_truth_date = "30_07"
-ground_truth_time = "16_42"
+ground_truth_time = "third20s"
 
 #PATH = "/home/cluster/smartGate/"
 PATH = "/home/daniubo/Scrivania/smartGate/"
@@ -50,8 +50,8 @@ PATH = "/home/daniubo/Scrivania/smartGate/"
 DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_time+".json"
 DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_time+".json"
 
-OUTPUT_PATH = PATH+"output/"+ground_truth_date+"_"+ground_truth_time+"/"+ground_truth_time+"_pir_results.csv"
-OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"_"+ground_truth_time+"/"+ground_truth_time+"_pir_partials.csv"
+OUTPUT_PATH = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_pir_results.csv"
+OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_pir_partials.csv"
 
 results = []
 
@@ -61,14 +61,14 @@ PIR = use[1]
 INFRA = use[0]
 
 if PIR == True:
-	var = [400,1200]
+	var = [500,1200]
 	delta = [800, 1750]
 	var_jump = 50
 	delta_jump =  50
 
 elif INFRA == True:
 	#enough_zero = var?
-	var = [15,33]
+	var = [18,30]
 	delta = [1000, 1900]
 	var_jump = 1
 	delta_jump = 50
@@ -91,6 +91,10 @@ for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 		pred = [en, ex]
 		temp.append("%.2f" % sqrt(mean_squared_error(actual_values, pred)))
 		temp.append("%.2f" % mean_absolute_error(actual_values, pred))
+		acc_in = 100-(abs(en-actual_values[0])/actual_values[0] * 100)
+		acc_out = 100-(abs(ex-actual_values[1])/actual_values[1] * 100)
+		temp.append(acc_in)
+		temp.append(acc_out)
 		temp.append(v)
 		temp.append(d)
 		results.append(temp)
@@ -100,10 +104,10 @@ for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 
 
 if INFRA:
-	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'enough_zero', 'delta'])
+	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'ACC. IN', 'ACC.OUT', 'enough_zero', 'delta'])
 	print("Ho finito :)")
 	results_pd.to_csv(OUTPUT_PATH, sep='\t')
 elif PIR:
-	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'span', 'delta'])
+	results_pd = pd.DataFrame(results, columns=['IN', 'OUT', 'RMSE', 'MAE', 'ACC. IN', 'ACC.OUT', 'span', 'delta'])
 	print("Ho finito :)")
 	results_pd.to_csv(OUTPUT_PATH, sep='\t')
