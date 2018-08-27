@@ -50,8 +50,7 @@ PATH = "/home/daniubo/Scrivania/smartGate/"
 DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_time+".json"
 DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_time+".json"
 
-OUTPUT_PATH = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_pir_results.csv"
-OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_pir_partials.csv"
+
 
 results = []
 
@@ -65,6 +64,8 @@ if PIR == True:
 	delta = [800, 1750]
 	var_jump = 50
 	delta_jump =  50
+	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_pir_results.csv"
+	OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_pir_partials.csv"
 
 elif INFRA == True:
 	#enough_zero = var?
@@ -72,6 +73,8 @@ elif INFRA == True:
 	delta = [1000, 1900]
 	var_jump = 1
 	delta_jump = 50
+	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_inf_results.csv"
+	OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_inf_partials.csv"
 
 
 with open(DATA_INPUT_A) as side_a:
