@@ -14,16 +14,16 @@ const char* mqtt_server = "10.172.0.11";
 
 unsigned int localPort = 2390; 
 
-int RECV_PIN = 4; //D2
+int RECV_PIN = 4; //ricevitore infrarossi D2
 
 long int tempo = 0;
 long int counter = 0;
-const int pir1b = 16;     //Pir1B = D0 = 16 
-const int pir0b = 14;     //Pir0B = D5 = 14
+const int pir0b = 14;      //Pir0B = D5 = 14 
+const int pir1b = 16;      //Pir1B = D0 = 16
 const int pAn = A0;       // pir analogico.
 
-const int led = 15; // D8
-const int ledRed = 2; // D4
+const int led = 15;   // led Blue D8
+const int ledRed = 2; // led Red  D4
 
 const int durata = 86400000;
 const int ultimi_secondi = 300000;
@@ -138,8 +138,6 @@ void reconnect() {
       delay(5000);
     }
   }
-
-
 }
 
 void loop() 
@@ -173,7 +171,7 @@ void loop()
   
   sleep_bello(10);
   
-  an.add(analogRead(pAn)); 
+  an.add(analogRead(pAn));
   
   if(digitalRead(pir1b)==HIGH)
   {
@@ -247,8 +245,7 @@ void loop()
       JsonArray& an = root.createNestedArray("AN");
       JsonArray& p1b = root.createNestedArray("P1B");
       JsonArray& p0b = root.createNestedArray("P0B");
-    }
-      
+    }    
 }
 
 void sleep_bello(int time_to_wait)  

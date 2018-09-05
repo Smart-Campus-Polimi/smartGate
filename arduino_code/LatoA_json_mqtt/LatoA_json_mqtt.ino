@@ -14,7 +14,7 @@ const char* mqtt_server = "10.172.0.11";
 
 unsigned int localPort = 2390; 
 
-int RECV_PIN = 4; //D2
+int RECV_PIN = 4; //ricevitore infrarossi D2
 
 long int tempo = 0;
 long int counter = 0;
@@ -22,8 +22,8 @@ const int pir0a = 14;    //Pir0A = D5
 const int pir1a = 16;    //Pir1A = D0
 const int pAn = A0;      // pir analogico.
 
-const int led = 15; // D8
-const int ledRed = 2; // D4
+const int led = 15; // led Blue D8
+const int ledRed = 2; // led Red D4
 
 const int durata = 86400000;
 const int ultimi_secondi = 300000;
@@ -245,9 +245,6 @@ void loop()
       JsonArray& an = root.createNestedArray("AN");
       JsonArray& p1a = root.createNestedArray("P1A");
       JsonArray& p0a = root.createNestedArray("P0A");
-      
-
-       
     }
 }
 
