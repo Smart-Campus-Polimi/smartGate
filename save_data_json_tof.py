@@ -76,7 +76,7 @@ def on_message(client, userdata, message):
 			dict_tof0['Time'] = int(datetime.datetime.now().strftime("%s"))*1000
 			list_of_dict_tof0.append(copy.deepcopy(dict_tof0))
 			try:
-				with open("/home/daniubo/Scrivania/smartGate/ground_truth_realistic/07_09/side_a_"+time_file+".json","w") as side_a:
+				with open("/home/daniubo/Scrivania/smartGate/ground_truth_realistic/07_09/tof0_"+time_file+".json","w") as side_a:
 					json.dump(list_of_dict_tof0, side_a)
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
@@ -95,7 +95,7 @@ def on_message(client, userdata, message):
 			dict_tof1['Time'] = int(datetime.datetime.now().strftime("%s"))*1000
 			list_of_dict_tof1.append(copy.deepcopy(dict_tof1))
 			try:
-				with open("/home/daniubo/Scrivania/smartGate/ground_truth_realistic/07_09/side_b_"+time_file+".json","w") as side_b:
+				with open("/home/daniubo/Scrivania/smartGate/ground_truth_realistic/07_09/tof1_"+time_file+".json","w") as side_b:
 					json.dump(list_of_dict_tof1, side_b)
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
@@ -122,7 +122,7 @@ class Subscriber_thread(threading.Thread):
 		print (">>> Connecting to broker\n")
 		subscriber.connect(self.broker_address);
 		print (">>> Subscribing to topic:", self.topic_sensors_tof0);
-		subscriber.subscribe(self.topic_sensors_tof1);
+		subscriber.subscribe(self.topic_sensors_tof0);
 		print(">>> Subscribed!\n")
 		print (">>> Subscribing to topic:", self.topic_sensors_tof1);
 		print(">>> Subscribed!\n")
