@@ -47,35 +47,66 @@ dict_a = {}
 dict_b = {}
 dict_c = {}
 lock = Lock()
+flag_a = False 
+flag_b = False
+
+hour = str(datetime.datetime.now().strftime('%H'))
+minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
+time_file = hour+"_"+minutes
 
 def on_message(client, userdata, message):
 		#print("message received, topic: ", message.topic)
 		global dict_a, list_of_dict_a
 		global dict_b, list_of_dict_b
 		global dict_c, list_of_dict_c
+		global time_file
+		global flag_a, flag_b
+		if flag_a and flag_b:
+			hour = str(datetime.datetime.now().strftime('%H'))
+			minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
+			time_file = hour+"_"+minutes
+			list_of_dict_a = []
+			list_of_dict_b = []
+			flag_a = False
+			flag_b = False
 		if message.topic == topic_sensors_a:
 			#print ("Message received on topic: ", topic_sensors_a)
 			print("a",  end="", flush=True)
 			try:
 				with lock:
 					dict_a.update(json.loads(str(message.payload.decode("utf-8"))));
-					dict_a['Time'] = int(datetime.datetime.now().strftime("%s"))*1000
-					list_of_dict_a.append(copy.deepcopy(dict_a))
 			except ValueError as e:
 				print(">>> Errore decodifica: ", e)
 				#print("Contenuto pacchetto:\n", str(message.payload.decode("utf-8")))
+				return
+			dict_a['Time'] = int(datetime.datetime.now().strftime("%s"))*1000
+			list_of_dict_a.append(copy.deepcopy(dict_a))
+			try:
+				with open("/home/daniubo/Scrivania/smartGate/ground_truth_realistic/07_09/side_a_"+time_file+".json","w") as side_a:
+					json.dump(list_of_dict_a, side_a)
+			except TypeError as e:
+				print(">>> Errore dump: ", e)
+			if(len(list_of_dict_a) > 300):
+				flag_a = True
 		elif message.topic == topic_sensors_b:
 			#print ("Message received on topic: ", topic_sensors_b)
 			print("b",  end="", flush=True)
-
 			try:
 				with lock:
 					dict_b.update(json.loads(str(message.payload.decode("utf-8"))));
-					dict_b['Time'] = int(datetime.datetime.now().strftime("%s"))*1000
-					list_of_dict_b.append(copy.deepcopy(dict_b))
 			except ValueError as e:
 				print(">>> Errore decodifica: ", e)
 				#print("Contenuto pacchetto:\n", str(message.payload.decode("utf-8")))
+				return
+			dict_b['Time'] = int(datetime.datetime.now().strftime("%s"))*1000
+			list_of_dict_b.append(copy.deepcopy(dict_b))
+			try:
+				with open("/home/daniubo/Scrivania/smartGate/ground_truth_realistic/07_09/side_b_"+time_file+".json","w") as side_b:
+					json.dump(list_of_dict_b, side_b)
+			except TypeError as e:
+				print(">>> Errore dump: ", e)
+			if(len(list_of_dict_b) > 300):
+				flag_b = True
 		elif message.topic == topic_camera:
 			#print ("Message received on topic: ", topic_sensors_b)
 			print("c",  end="", flush=True)
@@ -196,12 +227,7 @@ def subscribe():
 	sub.start()
 
 def main():
-	hour = str(datetime.datetime.now().strftime('%H'))
-	minutes = str(int(str(datetime.datetime.now().strftime('%M')))+1)
-	time_string = hour+":"+minutes
-
-	schedule.every().day.at(time_string).do(subscribe);
-	schedule.every(30).minutes.do(processing);
+	subscribe()
 
 	while True:
 		schedule.run_pending()
