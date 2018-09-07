@@ -18,7 +18,7 @@ int RECV_PIN = 4; //ricevitore infrarossi D2
 
 long int tempo = 0;
 long int counter = 0;
-const int pir0a = 14;    //Pir0A = D5 
+const int pir0a = 5;    //Pir0A = D1 
 const int pir1a = 16;    //Pir1A = D0
 const int pAn = A0;      // pir analogico.
 
