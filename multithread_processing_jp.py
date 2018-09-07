@@ -57,7 +57,7 @@ use = parse_args()
 delta = 1600 #standard value temporary
 var = []
 var.append(900) #standard value temporary
-var.append()
+var.append(30)
 
 def on_message(client, userdata, message):
 		#print("message received, topic: ", message.topic)

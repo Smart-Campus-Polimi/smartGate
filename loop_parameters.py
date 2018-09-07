@@ -22,7 +22,7 @@ i = 5			i = 12		i = 12		i = 9+sedia		i = 4		i = 18
 o = 5			o = 10		o = 10		o = 10			o = 7		o = 17
 '''
 
-import just_processing as jp
+import jp_graph_trial as jp
 from functions import parse_args
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error
@@ -34,21 +34,21 @@ import csv
 import sys
 import getopt
 
-REAL_IN = 8
-REAL_OUT = 11
+REAL_IN = 4
+REAL_OUT = 4
 actual_values = [REAL_IN, REAL_OUT]
 
 
-ground_truth_date = "30_07"
-ground_truth_time = "third20s"
+ground_truth_date = "07_09"
+ground_truth_time = "09_53"
 
 #PATH = "/home/cluster/smartGate/"
 PATH = "/home/daniubo/Scrivania/smartGate/"
 #PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_date+"_part6.json"
 #DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_date+"_part6.json"
-DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_time+".json"
-DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_time+".json"
+DATA_INPUT_A = PATH + "ground_truth_realistic/"+ ground_truth_date +"/side_a_"+ground_truth_time+".json"
+DATA_INPUT_B = PATH + "ground_truth_realistic/"+ ground_truth_date +"/side_b_"+ground_truth_time+".json"
 
 
 
@@ -60,21 +60,21 @@ PIR = use[1]
 INFRA = use[0]
 
 if PIR == True:
-	var = [500,1200]
-	delta = [800, 1750]
+	var = [1000,1200]
+	delta = [1000, 1200]
 	var_jump = 50
 	delta_jump =  50
-	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_pir_results.csv"
-	OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_pir_partials.csv"
+	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_pir_results.csv"
+	OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_pir_partials.csv"
 
 elif INFRA == True:
 	#enough_zero = var?
-	var = [18,30]
-	delta = [1000, 1900]
+	var = [15,26]
+	delta = [1000, 1200]
 	var_jump = 1
 	delta_jump = 50
-	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_inf_results.csv"
-	OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"_"+"20minutes_s"+"/"+ground_truth_time+"_inf_partials.csv"
+	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_inf_results.csv"
+	OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_inf_partials.csv"
 
 
 with open(DATA_INPUT_A) as side_a:
@@ -87,7 +87,7 @@ ex = 0
 
 for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 	for v in range(var[0], var[1]+var_jump, var_jump):
-		en, ex = jp.just_processing(a, b, d, v, use)
+		en, ex = jp.just_processing(a, b, d, v, use, ground_truth_time)
 		temp = []
 		temp.append(en)
 		temp.append(ex)

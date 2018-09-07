@@ -163,10 +163,10 @@ def just_processing(a, b, delta, var, use):
 
 		if do_graph:
 			#print("Qui aggiungere codice per grafici")
-			plt.plot(uniform_p0a, color='green')
-			plt.plot(uniform_p0b, color='orange')
-			plt.plot(uniform_p1a, color='blue')
-			plt.plot(uniform_p1b, color='red')
+			plt.plot(*zip(*p0a), color='green')
+			plt.plot(*zip(*p0b), color='orange')
+			plt.plot(*zip(*p1a), color='blue')
+			plt.plot(*zip(*p1b), color='red')
 			plt.ylim(-0.2, 1.2)
 			green_pir = mlines.Line2D([],[],color='green', label='p0a')
 			orange_pir = mlines.Line2D([],[],color='orange', label='p0b')

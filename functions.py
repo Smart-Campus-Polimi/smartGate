@@ -114,8 +114,14 @@ def processing_infrared_2(infrared, enough_zero):
 					break
 			if count > enough_zero:
 				index_list.append(infrared[i][0])
+			else:
+				j_final = j
+				j = j - count - 1
+				while j<j_final:
+					infrared[j][1] = 0
+					j = j + 1
 	#print("Lista:", index_list)
-	return list(index_list)
+	return list(index_list), infrared
 
 
 '''
@@ -292,6 +298,9 @@ def count_infrared(activate_infra_0, activate_infra_1, delta):
 	I=0
 	O=0
 	found = False
+	#print(activate_infra_0)
+	#print('##########################')
+	#print(activate_infra_1)
 	for a1 in activate_infra_1:
 		found = False
 		for a0 in activate_infra_0:
@@ -308,6 +317,11 @@ def count_infrared(activate_infra_0, activate_infra_1, delta):
 
 	return I,O
 
+# convert timestamp from ms to dates for graphs
+def from_ms_to_date(data):
+	for element in data:
+		element[0] = str(datetime.datetime.fromtimestamp(element[0]//1000.0))[11:]
+	return data
 
 def signal_handler(signal, frame):
 	print("\n>>> Exit!")
