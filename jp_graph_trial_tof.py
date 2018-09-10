@@ -60,10 +60,7 @@ def just_processing(a, b, TIME):
 	    array_support.append(0);
 
 	#print("Lunghezza supporto: ", len(array_support))
-
 	processing = True
-
-
 
 	uniform_tof0 = f.uniform_list_tof(array_support, tof0, min_ts, max_ts, min_ts, max_ts)
 	if (not uniform_tof0):

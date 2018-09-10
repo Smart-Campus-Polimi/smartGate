@@ -187,8 +187,6 @@ def activate_tof(dat):
 	for i in range(1, len(dat)):
 		if dat[i-1] == 1200 and dat[i] != 1200:
 			act.append(i)
-		elif dat[i-1] == 1200 and dat[i] != 1200:
-			act.append(i)
 	#print ('INIZIO\n')
 	#for i in range(0, len(act)-1, 2):
 	#	print (act[i+1] - act[i])
