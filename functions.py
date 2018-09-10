@@ -5,7 +5,7 @@ import datetime
 import sys
 import getopt
 
-PACKET_LOSS = 30496000;
+PACKET_LOSS = 8190;
 
 
 '''
@@ -54,6 +54,20 @@ def correcting_errors(data):
 				if(int(data[i+j]['Time'])) != PACKET_LOSS:
 					data[i]['Time'] = int(data[i+j]['Time'])-j*1000;
 					break;
+'''
+function that removes the errors in the timestamps due to missed packets from ntp server
+'''
+def correcting_errors_tof(data):
+	flag = 1
+	while flag == 1:
+		flag=0
+		for i in range(1,len(data)-1):
+			distance = data[i][1]
+			if distance > 1300:
+				data[i][1] = (data[i-1][1]+data[i+1][1])/2
+				flag=1
+	return list(data)
+
 '''
 Create  list with all the time interval equispaced
 '''
@@ -110,7 +124,7 @@ def processing_infrared_2(infrared, enough_zero):
 				count += 1
 				if j+1<len_infra:
 					j += 1
-				else: 
+				else:
 					break
 			if count > enough_zero:
 				index_list.append(infrared[i][0])
@@ -168,6 +182,21 @@ def activate(dat):
 
 	return list(act)
 
+def activate_tof(dat):
+	act = [];
+	for i in range(1, len(dat)):
+		if dat[i-1] == 1200 and dat[i] != 1200:
+			act.append(i)
+		elif dat[i-1] == 1200 and dat[i] != 1200:
+			act.append(i)
+	#print ('INIZIO\n')
+	#for i in range(0, len(act)-1, 2):
+	#	print (act[i+1] - act[i])
+	#print(len(act))
+	return list(act)
+
+
+
 '''
 build a list with all the 0-1 fronts
 '''
@@ -223,6 +252,43 @@ def uniform_list(support, samples_list, min_ts_side, max_ts_side,global_min_ts,g
     #print (len(lista))
 	return list(lista)
 
+def uniform_list_tof(support, samples_list, min_ts_side, max_ts_side,global_min_ts,global_max_ts):
+	lista = copy.deepcopy(support)
+    #print(len(samples_list))
+
+    #print("How much zeros at the start: ", min_ts-min_ts_side)
+	if min_ts_side > global_min_ts:
+		for m in range (0,min_ts_side-global_min_ts):
+			lista[m] = 0
+	sum_samples = 0
+    #print("###",min_ts_side-min_ts)
+	for i in range(0,len(samples_list)-1):
+        #print (i)
+		samples = int(samples_list[i+1][0])-int(samples_list[i][0])
+        #mean = (int(samples_list[i][1])+int(samples_list[i+1][1]))/2
+        #print(mean)
+		for j in range (sum_samples,sum_samples+samples):
+			try:
+				lista[j+min_ts_side-global_min_ts]=(int(samples_list[i][1]))
+			except IndexError:
+				print (j+min_ts_side-global_min_ts, "len lista >>> ",len(lista))
+				print("i, sample list: ", i, len(samples_list))
+				print("!!!samples:    ", samples_list)
+				print("The error is: ", index_error)
+				print("Happened at time: ",datetime.datetime.now().strftime("%Y-%d-%m %H:%M:%S"))
+				return False
+		sum_samples = sum_samples + samples
+    #print("How much zeros at the end: ", max_ts-max_ts_side)
+	if max_ts_side < global_max_ts:
+		for k in range (max_ts_side,global_max_ts-max_ts_side):
+			lista[k]=0
+	for i in range(0,len(lista)):
+		'''
+		il valore 1300 è il range massimo del sensore mentre 1000 dipende dalla larghezza del gate
+		'''
+		if lista[i] > 1000 and lista[i] <1300:
+			lista[i] = 1200
+	return list(lista)
 '''
 genera maschera per analisi del trenino
 '''
@@ -326,6 +392,30 @@ def from_ms_to_date(data):
 def signal_handler(signal, frame):
 	print("\n>>> Exit!")
 	sys.exit(0)
+
+'''
+count entries and exit from tof sensor
+'''
+
+def count_entries_tof(act_list0, act_list1, delta):
+	I=0
+	O=0
+	found = False
+
+	for a1 in act_list1:
+		found = False
+		for a0 in act_list0:
+			if a1>a0 and a1-a0<delta and not found:
+				O += 1
+				found = True
+	for a1 in act_list1:
+		found = False
+		for a0 in act_list0:
+			if a0>a1 and a0-a1<delta and not found:
+				I += 1
+				found = True
+	return I,O
+
 
 
 ''' BETA VERSION

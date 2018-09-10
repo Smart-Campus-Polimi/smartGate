@@ -8,14 +8,7 @@ import getopt
 import sys
 
 
-def just_processing(a, b, delta, var, use, TIME):
-	use_infra = use[0]
-	use_pir = use[1]
-	use_camera = use[2]
-	do_graph = use[3]
-	span = var
-	enough_zero = var
-	#use_anal = use[3]
+def just_processing(a, b, TIME):
 
 	'''
 	with open('side_a.json') as side_a:
@@ -23,134 +16,89 @@ def just_processing(a, b, delta, var, use, TIME):
 	with open('side_b.json') as side_b:
 		b = json.load(side_b)
 	'''
-	infrared_a = [];
-	infrared_b = [];
-	infrared_mask = [];
-	analog_a = [];
-	analog_b = [];
-	p0a = [];
-	p1a = [];
-	p0b = [];
-	p1b = [];
-	#f.correcting_errors(a);
-	#f.correcting_errors(b);
-	p0a_temp = []
-	p1a_temp = []
-	infrared_temp_a = []
-	analog_temp_a = []
-	p0b_temp = []
-	p1b_temp = []
-	infrared_temp_b = []
-	analog_temp_b = []
+	tof0 = [];
+	tof1 = [];
 
-	if use_camera:
-
-		in_people = 0
-		out_people = 0
-		timestamp_list = []
-		for packet in c:
-			in_people = in_people + packet['In']
-			out_people = out_people + packet['Out']
-			timestamp_list.append(packet['Timestamp'])
-		print("Camera:\tIn:", in_people, "\tOut: ", out_people)
-
+	tof0_temp = []
+	tof1_temp = []
 
 	for packet in a:
-		p0a_temp = packet['P0A']
-		p1a_temp = packet['P1A']
-		infrared_temp_a = packet['IR']
-		analog_temp_a = packet['AN']
-
-		if (len(p0a_temp) == len(p1a_temp) and len(p0a_temp) == len(infrared_temp_a) and len(p0a_temp) == len(analog_temp_a)):
-				number_of_samples = len(analog_temp_a)
-		else:
-			print("\n\n>>> Lunghezze liste lato a differenti!!\n\n")
-		number_of_samples = len(infrared_temp_a);
-		#print("Numero campioni: ",number_of_samples)
+		tof0_temp = packet['TOF']
+		number_of_samples = len(tof0_temp);
 		time_vector = f.building_time(packet, round(float(1000/number_of_samples)));
-		partial_infrared_a = [list(a) for a in zip(time_vector, infrared_temp_a)]
-		partial_analog_a = [list(a) for a in zip(time_vector, analog_temp_a)]
-		infrared_a = infrared_a + partial_infrared_a;
-		analog_a = analog_a + partial_analog_a;
-		p0a_partial = [list(a) for a in zip(time_vector, p0a_temp)]
-		p0a = p0a + p0a_partial
-		p1a_partial = [list(a) for a in zip(time_vector, p1a_temp)]
-		p1a = p1a + p1a_partial
+		partial_tof0 = [list(a) for a in zip(time_vector, tof0_temp)]
+		tof0 = tof0 + partial_tof0;
+
 
 	for packet in b:
-		p0b_temp = packet['P0B']
-		p1b_temp = packet['P1B']
-		infrared_temp_b = packet['IR']
-		analog_temp_b = packet['AN']
-
-		if (len(p0b_temp) == len(p1b_temp) and len(p0b_temp) == len(infrared_temp_b) and len(p0b_temp) == len(analog_temp_b)):
-	 		number_of_samples = len(analog_temp_b)
-		else:
-			print("\n\n>>> Lunghezze liste lato b differenti!!\n\n")
-
-		number_of_samples = len(analog_temp_b);
-		#print("Numero campioni b:", number_of_samples)
+		tof1_temp = packet['TOF']
+		number_of_samples = len(tof1_temp);
 		time_vector = f.building_time(packet, round(float(1000/number_of_samples)));
-		partial_analog_b = [list(a) for a in zip(time_vector, analog_temp_b)]
-		partial_infrared_b = [list(a) for a in zip(time_vector, infrared_temp_b)]
-		infrared_b = infrared_b + partial_infrared_b;
-		analog_b = analog_b + partial_analog_b;
-		p0b_partial = [list(a) for a in zip(time_vector, p0b_temp)]
-		p0b = p0b + p0b_partial
-		p1b_partial = [list(a) for a in zip(time_vector, p1b_temp)]
-		p1b = p1b + p1b_partial
+		partial_tof1 = [list(b) for b in zip(time_vector, tof1_temp)]
+		tof1 = tof1 + partial_tof1;
 
+	tof1 = f.correcting_errors_tof(tof1)
+	tof0 = f.correcting_errors_tof(tof0)
+	'''
+	plt.plot(*zip(*tof1), color='green')
+	green_tof = mlines.Line2D([], [], color='green', label='1')
+	plt.legend(handles=[green_tof])
+	plt.plot(*zip(*tof0), color='red')
+	red_tof = mlines.Line2D([], [], color='red', label='0')
+	plt.legend(handles=[red_tof])
+	plt.show();
+	'''
 
-	min_ts = min(p0b[0][0],p0a[0][0],p1a[0][0],p1b[0][0])
-	max_ts = max(p0b[len(p0b)-1][0],p0a[len(p0a)-1][0],p1b[len(p1b)-1][0],p1a[len(p1a)-1][0])
+	min_ts = min(tof1[0][0],tof0[0][0])
+	max_ts = max(tof1[len(tof1)-1][0],tof0[len(tof0)-1][0])
 
 
 	interval = int(max_ts-min_ts)
 
-	min_ts_a = min(p0a[0][0],p1a[0][0])
-	min_ts_b = min(p0b[0][0],p1b[0][0])
-	max_ts_a = p0a[-1][0]
-	max_ts_b = p0b[-1][0]
-
-	min_ts_side = min(min_ts_a, min_ts_b)
-	max_ts_side = max(max_ts_a, max_ts_b)
-
-	#interval = int(max_ts-min_ts)
 	array_support = []
 	for i in range(0,interval):
 	    array_support.append(0);
+
 	#print("Lunghezza supporto: ", len(array_support))
 
 	processing = True
 
-	if use_pir:
-		uniform_p0a = f.uniform_list(array_support, p0a,min_ts_a,max_ts_a,min_ts,max_ts)
-		if (not uniform_p0a):
-			processing = False
-			return
-		#print("Lunghezza p0a: ", len(uniform_p0a))
-		uniform_p0b = f.uniform_list(array_support,p0b,min_ts_b,max_ts_b,min_ts,max_ts)
-		if (not uniform_p0b):
-			processing = False
-			return
-		#print("Lunghezza p0b: ", len(uniform_p0b))
-		uniform_p1a = f.uniform_list(array_support,p1a,min_ts_a,max_ts_a,min_ts,max_ts)
-		if (not uniform_p1a):
-			processing = False
-			return
-		#print("Lunghezza p1a: ", len(uniform_p1a))
-		uniform_p1b = f.uniform_list(array_support,p1b,min_ts_b,max_ts_b,min_ts,max_ts)
-		if (not uniform_p1b):
-			processing = False
-			return
-		#print("Lunghezza p1b: ", len(uniform_p1b))
 
+
+	uniform_tof0 = f.uniform_list_tof(array_support, tof0, min_ts, max_ts, min_ts, max_ts)
+	if (not uniform_tof0):
+		processing = False
+		return
+	#print("Lunghezza p0a: ", len(uniform_p0a))
+	uniform_tof1 = f.uniform_list_tof(array_support, tof1, min_ts, max_ts, min_ts, max_ts)
+	if (not uniform_tof1):
+		processing = False
+		return
+
+	plt.plot(uniform_tof1, color='green')
+	green_tof = mlines.Line2D([], [], color='green', label='1')
+	plt.legend(handles=[green_tof])
+	plt.plot(uniform_tof0, color='red')
+	red_tof = mlines.Line2D([], [], color='red', label='0')
+	plt.legend(handles=[red_tof])
+	plt.show();
+
+	activation_tof0 = f.activate_tof(uniform_tof0)
+	activation_tof1 = f.activate_tof(uniform_tof1)
+
+	entrate = 0
+	uscite = 0
+	delta = 1500
+	entrate,uscite = f.count_entries_tof(activation_tof0, activation_tof1,delta)
+	print("Entrate ",entrate," Uscite ", uscite)
+
+	return 0,0
+	'''
 		#pir_mask = f.generate_mask(array_support,uniform_p0a,uniform_p0b,uniform_p1a,uniform_p1b)
 
 		activation_p0a = f.activate(uniform_p0a)
 		activation_p1a = f.activate(uniform_p1a)
-		activation_p0b = f.activate(uniform_p0b)
-		activation_p1b = f.activate(uniform_p1b)
+
 
 		#activation_mask = f.activate(pir_mask)
 		if processing:
@@ -160,7 +108,8 @@ def just_processing(a, b, delta, var, use, TIME):
 		if processing:
 			I_pir = max(ins_a, ins_b);
 			O_pir= max(out_a, out_b);
-
+'''
+'''
 		if do_graph:
 			#GRAPH BUILDER
 			ts_array = np.loadtxt("/home/daniubo/Scrivania/smartGate/appTS/ts_"+TIME+"_csv.csv", dtype = int, delimiter = ",", skiprows=1)
@@ -275,8 +224,9 @@ def just_processing(a, b, delta, var, use, TIME):
 		return 1
 	else:
 		print("Nothing enabled: NO DATA.\n")
-	'''
+'''
+'''
 	data = open("all_data.txt", "a")
 	data.write('\n################################\nTimestamp: '+ datetime.datetime.now().strftime("%Y-%d-%m %H:%M:%S") +'\nEffective entries: '+str(I)+'\nEffective Exits: '+str(O)+'\n################################\n')
 	data.close()
-	'''
+'''
