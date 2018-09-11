@@ -81,7 +81,7 @@ def on_message(client, userdata, message):
 			list_of_dict_tof0.append(copy.deepcopy(dict_tof0))
 			'''
 			try:
-				with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/07_09/tof0_"+time_file+".json","w") as side_a:
+				with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/10_09/tof0_"+time_file+".json","w") as side_a:
 					json.dump(list_of_dict_tof0, side_a)
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
@@ -102,7 +102,7 @@ def on_message(client, userdata, message):
 			list_of_dict_tof1.append(copy.deepcopy(dict_tof1))
 			'''
 			try:
-				with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/07_09/tof1_"+time_file+".json","w") as side_b:
+				with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/10_09/tof1_"+time_file+".json","w") as side_b:
 					json.dump(list_of_dict_tof1, side_b)
 			except TypeError as e:
 				print(">>> Errore dump: ", e)

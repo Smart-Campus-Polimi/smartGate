@@ -14,7 +14,7 @@ import datetime
 import pprint as pp
 from copy import deepcopy
 import functions as f
-import MySQLdb
+#import MySQLdb
 import signal
 
 PACKET_LOSS = 30496000;
@@ -47,7 +47,7 @@ dict_a = {}
 dict_b = {}
 dict_c = {}
 lock = Lock()
-flag_a = False 
+flag_a = False
 flag_b = False
 
 hour = str(datetime.datetime.now().strftime('%H'))
@@ -82,7 +82,7 @@ def on_message(client, userdata, message):
 			dict_a['Time'] = int(datetime.datetime.now().strftime("%s"))*1000
 			list_of_dict_a.append(copy.deepcopy(dict_a))
 			try:
-				with open("/home/daniubo/Scrivania/smartGate/ground_truth_realistic/07_09/side_a_"+time_file+".json","w") as side_a:
+				with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/10_09/side_a_"+time_file+".json","w") as side_a:
 					json.dump(list_of_dict_a, side_a)
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
@@ -101,7 +101,7 @@ def on_message(client, userdata, message):
 			dict_b['Time'] = int(datetime.datetime.now().strftime("%s"))*1000
 			list_of_dict_b.append(copy.deepcopy(dict_b))
 			try:
-				with open("/home/daniubo/Scrivania/smartGate/ground_truth_realistic/07_09/side_b_"+time_file+".json","w") as side_b:
+				with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/10_09/side_b_"+time_file+".json","w") as side_b:
 					json.dump(list_of_dict_b, side_b)
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
@@ -159,10 +159,10 @@ class Subscriber_thread(threading.Thread):
 		subscriber.subscribe(self.topic_sensors_a);
 		print(">>> Subscribed!\n")
 		print (">>> Subscribing to topic:", self.topic_sensors_b);
-		print(">>> Subscribed!\n") 
+		print(">>> Subscribed!\n")
 		subscriber.subscribe(self.topic_sensors_b);
 		print (">>> Subscribing to topic:", self.topic_camera);
-		print(">>> Subscribed!\n") 
+		print(">>> Subscribed!\n")
 		subscriber.subscribe(self.topic_camera);
 		subscriber.loop_forever()
 
