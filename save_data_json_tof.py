@@ -61,7 +61,9 @@ def on_message(client, userdata, message):
 			minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
 			time_file = hour+"_"+minutes
 			'''
-			dump_t = Dumping_thread()
+			tof0 = copy.deepcopy(list_of_dict_tof0)
+			tof1 = copy.deepcopy(list_of_dict_tof1)
+			dump_t = Dumping_thread(tof0, tof1)
 			dump_t.start()
 			list_of_dict_tof0 = []
 			list_of_dict_tof1 = []
@@ -86,7 +88,7 @@ def on_message(client, userdata, message):
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
 			'''
-			if(len(list_of_dict_tof0) > 300):
+			if(len(list_of_dict_tof0) > 10):
 				flag_a = True
 		elif message.topic == topic_sensors_tof1:
 			#print ("Message received on topic: ", topic_sensors_b)
@@ -107,7 +109,7 @@ def on_message(client, userdata, message):
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
 			'''
-			if(len(list_of_dict_tof1) > 300):
+			if(len(list_of_dict_tof1) > 10):
 				flag_b = True
 		else:
 			print(">>> Errore\n")
@@ -161,24 +163,23 @@ class Processer_thread(threading.Thread):
 
 class Dumping_thread(threading.Thread):
 
-	def __init__(self):
+	def __init__(self, tof0, tof1):
 		threading.Thread.__init__(self)
-		global list_of_dict_tof0, list_of_dict_tof1
-		self.tof0 = list_of_dict_tof0
-		self.tof1 = list_of_dict_tof1
+		self.tof0 = tof0
+		self.tof1 = tof1
 
 	def run(self):
 		hour = str(datetime.datetime.now().strftime('%H'))
 		minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
 		time_file = hour+"_"+minutes
 		try:
-			with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/07_09/tof0_"+time_file+".json","w") as side_a:
-				json.dump(list_of_dict_tof0, side_a)
+			with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/11_09/tof0_"+time_file+".json","w") as side_a:
+				json.dump(self.tof0, side_a)
 		except TypeError as e:
 			print(">>> Errore dump: ", e)
 		try:
-			with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/07_09/tof1_"+time_file+".json","w") as side_b:
-				json.dump(list_of_dict_tof1, side_b)
+			with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/11_09/tof1_"+time_file+".json","w") as side_b:
+				json.dump(self.tof1, side_b)
 		except TypeError as e:
 			print(">>> Errore dump: ", e)
 

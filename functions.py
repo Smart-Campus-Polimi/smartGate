@@ -239,7 +239,7 @@ def uniform_list(support, samples_list, min_ts_side, max_ts_side,global_min_ts,g
 				print (j+min_ts_side-global_min_ts, "len lista >>> ",len(lista))
 				print("i, sample list: ", i, len(samples_list))
 				print("!!!samples:    ", samples_list)
-				print("The error is: ", index_error)
+				print("The error is: ", Index_error)
 				print("Happened at time: ",datetime.datetime.now().strftime("%Y-%d-%m %H:%M:%S"))
 				return False
 		sum_samples = sum_samples + samples
@@ -251,17 +251,18 @@ def uniform_list(support, samples_list, min_ts_side, max_ts_side,global_min_ts,g
 	return list(lista)
 
 def uniform_list_tof(support, samples_list, min_ts_side, max_ts_side,global_min_ts,global_max_ts):
-	lista = copy.deepcopy(support)
-    #print(len(samples_list))
 
-    #print("How much zeros at the start: ", min_ts-min_ts_side)
+	lista = copy.deepcopy(support)
+	#print(len(lista))
+	#print("sample_list:",len(samples_list))
+	#print("How much zeros at the start: ", global_min_ts-min_ts_side)
 	if min_ts_side > global_min_ts:
 		for m in range (0,min_ts_side-global_min_ts):
 			lista[m] = 0
 	sum_samples = 0
-    #print("###",min_ts_side-min_ts)
+	#print("###",min_ts_side-global_min_ts)
 	for i in range(0,len(samples_list)-1):
-        #print (i)
+		#print(i,"###",sum_samples)
 		samples = int(samples_list[i+1][0])-int(samples_list[i][0])
         #mean = (int(samples_list[i][1])+int(samples_list[i+1][1]))/2
         #print(mean)
@@ -271,15 +272,19 @@ def uniform_list_tof(support, samples_list, min_ts_side, max_ts_side,global_min_
 			except IndexError:
 				print (j+min_ts_side-global_min_ts, "len lista >>> ",len(lista))
 				print("i, sample list: ", i, len(samples_list))
-				print("!!!samples:    ", samples_list)
-				print("The error is: ", index_error)
+				#print("!!!samples:    ", samples_list)
+				#print("The error is: ", Index_error)
 				print("Happened at time: ",datetime.datetime.now().strftime("%Y-%d-%m %H:%M:%S"))
 				return False
 		sum_samples = sum_samples + samples
-    #print("How much zeros at the end: ", max_ts-max_ts_side)
+	#print("How much zeros at the end: ", global_max_ts-max_ts_side)
 	if max_ts_side < global_max_ts:
-		for k in range (max_ts_side,global_max_ts-max_ts_side):
-			lista[k]=0
+
+		for k in range (0,global_max_ts-max_ts_side):
+			#print(k)
+			lista[len(lista)-k-1]=lista[len(lista)-(global_max_ts-max_ts_side+1)]
+	#print (lista)
+
 	for i in range(0,len(lista)):
 		'''
 		il valore 1300 è il range massimo del sensore mentre 1000 dipende dalla larghezza del gate
@@ -395,7 +400,7 @@ def signal_handler(signal, frame):
 count entries and exit from tof sensor
 '''
 
-def count_entries_tof(act_list0, act_list1, delta):
+def count_entries_tof(act_list0, act_list1, delta, time):
 	I=0
 	O=0
 	found = False
@@ -403,13 +408,17 @@ def count_entries_tof(act_list0, act_list1, delta):
 	for a1 in act_list1:
 		found = False
 		for a0 in act_list0:
-			if a1>a0 and a1-a0<delta and not found:
+			if a1>=a0 and a1-a0<delta and not found:
+				dateU = datetime.datetime.fromtimestamp((a0+time)/1000).strftime('%Y-%m-%d %H:%M:%S')
+				print("Uscita: ",dateU)
 				O += 1
 				found = True
 	for a1 in act_list1:
 		found = False
 		for a0 in act_list0:
 			if a0>a1 and a0-a1<delta and not found:
+				dateE = datetime.datetime.fromtimestamp((a1+time)/1000).strftime('%Y-%m-%d %H:%M:%S')
+				print("Entrata: ",dateE)
 				I += 1
 				found = True
 	return I,O

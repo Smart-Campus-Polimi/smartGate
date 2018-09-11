@@ -51,9 +51,17 @@ def just_processing(a, b, TIME):
 
 	min_ts = min(tof1[0][0],tof0[0][0])
 	max_ts = max(tof1[len(tof1)-1][0],tof0[len(tof0)-1][0])
-
+	#print(tof1[0],tof1[-1])
+	#print("############")
+	#print(tof0[0],tof0[-1])
 
 	interval = int(max_ts-min_ts)
+
+	min_ts_tof0 = tof0[0][0]
+	min_ts_tof1 = tof1[0][0]
+	max_ts_tof0 = tof0[-1][0]
+	max_ts_tof1 = tof1[-1][0]
+
 
 	array_support = []
 	for i in range(0,interval):
@@ -62,12 +70,12 @@ def just_processing(a, b, TIME):
 	#print("Lunghezza supporto: ", len(array_support))
 	processing = True
 
-	uniform_tof0 = f.uniform_list_tof(array_support, tof0, min_ts, max_ts, min_ts, max_ts)
+	uniform_tof0 = f.uniform_list_tof(array_support, tof0, min_ts_tof0, max_ts_tof0, min_ts, max_ts)
 	if (not uniform_tof0):
 		processing = False
 		return
 	#print("Lunghezza p0a: ", len(uniform_p0a))
-	uniform_tof1 = f.uniform_list_tof(array_support, tof1, min_ts, max_ts, min_ts, max_ts)
+	uniform_tof1 = f.uniform_list_tof(array_support, tof1, min_ts_tof1, max_ts_tof1, min_ts, max_ts)
 	if (not uniform_tof1):
 		processing = False
 		return
@@ -80,13 +88,14 @@ def just_processing(a, b, TIME):
 	plt.legend(handles=[red_tof])
 	plt.show();
 
+
 	activation_tof0 = f.activate_tof(uniform_tof0)
 	activation_tof1 = f.activate_tof(uniform_tof1)
 
 	entrate = 0
 	uscite = 0
 	delta = 1500
-	entrate,uscite = f.count_entries_tof(activation_tof0, activation_tof1,delta)
+	entrate,uscite = f.count_entries_tof(activation_tof0, activation_tof1,delta, min_ts)
 	print("Entrate ",entrate," Uscite ", uscite)
 
 	return 0,0
