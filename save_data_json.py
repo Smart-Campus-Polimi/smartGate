@@ -62,9 +62,16 @@ def on_message(client, userdata, message):
 		global time_file
 		global flag_a, flag_b
 		if flag_a and flag_b:
+			'''
 			hour = str(datetime.datetime.now().strftime('%H'))
 			minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
 			time_file = hour+"_"+minutes
+			'''
+			a = copy.deepcopy(list_of_dict_a)
+			b = copy.deepcopy(list_of_dict_b)
+			#c = copy.deepcopy(list_of_dict_c)
+			dump_t = Dumping_thread(a, b)
+			dump_t.start()
 			list_of_dict_a = []
 			list_of_dict_b = []
 			flag_a = False
@@ -81,11 +88,13 @@ def on_message(client, userdata, message):
 				return
 			dict_a['Time'] = int(datetime.datetime.now().strftime("%s"))*1000
 			list_of_dict_a.append(copy.deepcopy(dict_a))
+			'''
 			try:
 				with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/10_09/side_a_"+time_file+".json","w") as side_a:
 					json.dump(list_of_dict_a, side_a)
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
+			'''
 			if(len(list_of_dict_a) > 300):
 				flag_a = True
 		elif message.topic == topic_sensors_b:
@@ -100,11 +109,13 @@ def on_message(client, userdata, message):
 				return
 			dict_b['Time'] = int(datetime.datetime.now().strftime("%s"))*1000
 			list_of_dict_b.append(copy.deepcopy(dict_b))
+			'''
 			try:
 				with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/10_09/side_b_"+time_file+".json","w") as side_b:
 					json.dump(list_of_dict_b, side_b)
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
+			'''
 			if(len(list_of_dict_b) > 300):
 				flag_b = True
 		elif message.topic == topic_camera:
@@ -186,6 +197,30 @@ class Processer_thread(threading.Thread):
 			with open("camera.json","w") as cam:
 				json.dump(list_of_dict_c, cam)
 
+
+		return
+
+class Dumping_thread(threading.Thread):
+
+	def __init__(self, a, b):
+		threading.Thread.__init__(self)
+		self.a = a
+		self.b = b
+
+	def run(self):
+		hour = str(datetime.datetime.now().strftime('%H'))
+		minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
+		time_file = hour+"_"+minutes
+		try:
+			with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/13_09/sensors/side_a_"+time_file+".json","w") as side_a:
+				json.dump(self.a, side_a)
+			except TypeError as e:
+				print(">>> Errore dump: ", e)
+		try:
+			with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/13_09/sensors/side_b_"+time_file+".json","w") as side_b:
+				json.dump(self.b, side_b)
+			except TypeError as e:
+				print(">>> Errore dump: ", e)
 
 		return
 
