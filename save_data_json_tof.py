@@ -173,12 +173,12 @@ class Dumping_thread(threading.Thread):
 		minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
 		time_file = hour+"_"+minutes
 		try:
-			with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/13_09/tof/tof0_"+time_file+".json","w") as side_a:
+			with open("/home/cluster/smartGate/ground_truth_realistic/13_09/tof/tof0_"+time_file+".json","w") as side_a:
 				json.dump(self.tof0, side_a)
 		except TypeError as e:
 			print(">>> Errore dump: ", e)
 		try:
-			with open("/users/wunagana/Documents/GitHub/smartGate/ground_truth_realistic/13_09/tof/tof1_"+time_file+".json","w") as side_b:
+			with open("/home/cluster/smartGate/ground_truth_realistic/13_09/tof/tof1_"+time_file+".json","w") as side_b:
 				json.dump(self.tof1, side_b)
 		except TypeError as e:
 			print(">>> Errore dump: ", e)
