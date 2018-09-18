@@ -16,8 +16,8 @@ REAL_OUT = 4
 actual_values = [REAL_IN, REAL_OUT]
 
 
-ground_truth_date = "11_09"
-ground_truth_time = "11_09_pomeriggio_antlab"
+ground_truth_date = "18_09/tof"
+ground_truth_time = "14_49"
 
 #PATH = "/home/cluster/smartGate/"
 #PATH = "/home/daniubo/Scrivania/smartGate/"

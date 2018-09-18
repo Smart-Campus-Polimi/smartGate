@@ -19,7 +19,9 @@ import signal
 
 PACKET_LOSS = 30496000;
 BROKER_ADDRESS = "10.79.1.176"
-
+#PATH = "/home/cluster/smartGate/"
+#PATH = "/home/daniubo/Scrivania/smartGate/"
+PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #db = MySQLdb.connect(host="10.79.1.176", user = "root", passwd = "root", db = "smartgateDB_real")
 #cursor = db.cursor()
 
@@ -212,14 +214,14 @@ class Dumping_thread(threading.Thread):
 		minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
 		time_file = hour+"_"+minutes
 		try:
-			with open("/home/cluster/smartGate/ground_truth_realistic/13_09/sensors/side_a_"+time_file+".json","w") as side_a:
+			with open(PATH+"/ground_truth_realistic/13_09/sensors/side_a_"+time_file+".json","w") as side_a:
 				json.dump(self.a, side_a)
-			except TypeError as e:
+		except TypeError as e:
 				print(">>> Errore dump: ", e)
 		try:
-			with open("/home/cluster/smartGate/ground_truth_realistic/13_09/sensors/side_b_"+time_file+".json","w") as side_b:
+			with open(PATH+"/ground_truth_realistic/13_09/sensors/side_b_"+time_file+".json","w") as side_b:
 				json.dump(self.b, side_b)
-			except TypeError as e:
+		except TypeError as e:
 				print(">>> Errore dump: ", e)
 
 		return
