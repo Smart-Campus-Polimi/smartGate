@@ -68,13 +68,13 @@ void setup() {
 
   //Fase di calibrazione
   digitalWrite(ledRed,HIGH);
-  Serial.print("Calibrazione del sensore ");
+  //Serial.print("Calibrazione del sensore ");
   for (int i = 0; i < calibrationTime; i++) {
-    Serial.print(".");
+    //Serial.print(".");
     delay(1000);
   }
-  Serial.println(" Fatto");
-  Serial.println("SENSORE ATTIVO");
+  //Serial.println(" Fatto");
+  //Serial.println("SENSORE ATTIVO");
   delay(50); 
   digitalWrite(ledRed,LOW);
   digitalWrite(led,HIGH);
@@ -94,46 +94,46 @@ void setup() {
 void setup_wifi() {
   delay(10);
   // We start by connecting to a WiFi network
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
+  //Serial.println();
+  //Serial.print("Connecting to ");
+  //Serial.println(ssid);
   WiFi.begin(ssid, password);
   while (WiFi.status() != WL_CONNECTED) 
   {
     delay(250);
-    Serial.print(".");
+    //Serial.print(".");
   }
-  Serial.println("");
-  Serial.println("WiFi connected");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+  //Serial.println("");
+  //Serial.println("WiFi connected");
+  //Serial.println("IP address: ");
+  //Serial.println(WiFi.localIP());
 }
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
+  //Serial.print("Message arrived [");
+  //Serial.print(topic);
+  //Serial.print("] ");
   for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
+    //Serial.print((char)payload[i]);
   }
-  Serial.println();
+  //Serial.println();
 }
 
 void reconnect() {
   // Loop until we're reconnected
   while (!client.connected()) {
-    Serial.print("Attempting MQTT connection...");
+    //Serial.print("Attempting MQTT connection...");
     // Attempt to connect
     if (client.connect("")) {
-      Serial.println("connected");
+      //Serial.println("connected");
       // Once connected, publish an announcement...
       //client.publish("outTopic", "hello world");
       // ... and resubscribe
       //client.subscribe("inTopic");
     } else {
-      Serial.print("failed, rc=");
-      Serial.print(client.state());
-      Serial.println(" try again in 5 seconds");
+      //Serial.print("failed, rc=");
+      //Serial.print(client.state());
+      //Serial.println(" try again in 5 seconds");
       // Wait 5 seconds before retrying
       delay(5000);
     }
@@ -162,10 +162,12 @@ void loop()
   {
       ir.add(1);
       irrecv.resume(); // Receive the next value
+      Serial.println("1");
 
   }
   else
   {
+      Serial.println("0");
       ir.add(0);
   }
 
@@ -198,8 +200,8 @@ void loop()
   while(WiFi.status() != WL_CONNECTED)
   { 
     WiFi.begin(ssid, password);
-    Serial.print("Stato WiFi: ");
-    Serial.print(WiFi.status());
+    //Serial.print("Stato WiFi: ");
+    //Serial.print(WiFi.status());
   }
           
   // ogni secondo invio tutto quello che ho ricevuto
@@ -216,15 +218,15 @@ void loop()
       }
       client.loop();     
       
-      Serial.print("\n#SN ");
-      Serial.print(sequenceNumber);    
-      Serial.print(" Campioni= ");
-      Serial.print(c);
-      Serial.print(" istante= ");
-      Serial.println(millis()-counter);
+      //Serial.print("\n#SN ");
+      //Serial.print(sequenceNumber);    
+      //Serial.print(" Campioni= ");
+      //Serial.print(c);
+      //Serial.print(" istante= ");
+      //Serial.println(millis()-counter);
       
       const int BUFFER_SIZE = JSON_OBJECT_SIZE(6) + JSON_ARRAY_SIZE(c*4);
-      Serial.println(BUFFER_SIZE);
+      //Serial.println(BUFFER_SIZE);
       
       c=0;
       secondi=round((millis()-counter)/1000)+1;
@@ -235,9 +237,9 @@ void loop()
       client.publish("smartgate/sg1/mls/sa",JSONmessagebuffer);
       
       //root.printTo(Serial);
-      Serial.print("\nFree memory is: ");
+      //Serial.print("\nFree memory is: ");
       uint32_t freeMemory = system_get_free_heap_size();
-      Serial.print (freeMemory);     
+      //Serial.print (freeMemory);     
         
       JSONbuffer.clear();
       JsonObject& root = JSONbuffer.createObject();

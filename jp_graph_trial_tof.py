@@ -7,9 +7,9 @@ import signal
 import getopt
 import sys
 
-DATA = "11-09-2018"
-PATH = "GT_telefono/11_09/"
-DATE =  "11_09.txt"
+DATA = "13-09-2018"
+PATH = "GT_telefono/13_09/"
+DATE =  "13_09.txt"
 FUSO_ORARIO = 7200000
 
 def just_processing(a, b, TIME):
@@ -89,22 +89,24 @@ def just_processing(a, b, TIME):
 	lista_ingressi = []
 	uscita = []
 	lista_uscite = []
-	print (max_ts%86400000+FUSO_ORARIO,"<- max ######### min -> ",min_ts%86400000+FUSO_ORARIO)
+	#print (max_ts%86400000+FUSO_ORARIO,"<- max ######### min -> ",min_ts%86400000+FUSO_ORARIO)
 	for i in lines:
 		if i[0] == "I" and i[4:14] == DATA:
 
 			millisecondi = sum(int(x) * 60 ** j for j,x in enumerate(reversed(i[16:24].split(":"))))*1000
-			print ("Analisi: ", millisecondi)
+			#print ("Analisi: ", millisecondi)
 			if millisecondi >= (min_ts%86400000 + FUSO_ORARIO) and millisecondi <= ((max_ts%86400000) + FUSO_ORARIO):
-				print("I",millisecondi)
+				#print("I",millisecondi)
 				lista_ingressi.append(millisecondi-(min_ts%86400000 + FUSO_ORARIO))
 		elif i[0] == "O" and i[5:15] == DATA:
 			millisecondi = sum(int(x) * 60 ** j for j,x in enumerate(reversed(i[17:25].split(":"))))*1000
-			print ("Analisi: ", millisecondi)
+			#print ("Analisi: ", millisecondi)
 			if millisecondi >= (min_ts%86400000 + FUSO_ORARIO) and millisecondi <= ((max_ts%86400000) + FUSO_ORARIO):
-				print("O",millisecondi)
+				#print("O",millisecondi)
 				lista_uscite.append(millisecondi-(min_ts%86400000 + FUSO_ORARIO))
-
+	print("------- GROUND TRUTH ---------")
+	print("Entrate ",len(lista_ingressi))
+	print("Uscite ",len(lista_uscite))
 	plt.plot(lista_ingressi, [10]*len(lista_ingressi), 'ro', color='red')
 	plt.plot(lista_uscite, [10]*len(lista_uscite), 'ro', color='green')
 
@@ -124,7 +126,8 @@ def just_processing(a, b, TIME):
 	uscite = 0
 	delta = 1500
 	entrate,uscite = f.count_entries_tof(activation_tof0, activation_tof1,delta, min_ts)
-	print("Entrate ",entrate," Uscite ", uscite)
+	print("------- RILEVAZIONI ----------")
+	print("Entrate ",entrate,"\nUscite ", uscite)
 
 	return 0,0
 	'''
