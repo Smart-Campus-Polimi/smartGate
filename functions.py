@@ -58,6 +58,9 @@ def correcting_errors(data):
 function that removes the errors in the timestamps due to missed packets from ntp server
 '''
 def correcting_errors_tof(data):
+
+
+
 	flag = 1
 	while flag == 1:
 		flag=0
@@ -66,6 +69,7 @@ def correcting_errors_tof(data):
 			if distance > 1300:
 				data[i][1] = (data[i-1][1]+data[i+1][1])/2
 				flag=1
+	
 	return list(data)
 
 '''
@@ -410,7 +414,7 @@ def count_entries_tof(act_list0, act_list1, delta, time):
 		for a0 in act_list0:
 			if a1>=a0 and a1-a0<delta and not found:
 				dateU = datetime.datetime.fromtimestamp((a0+time)/1000).strftime('%Y-%m-%d %H:%M:%S')
-				print("Uscita: ",dateU)
+				#print("Uscita: ",dateU)
 				O += 1
 				found = True
 	for a1 in act_list1:
@@ -418,7 +422,7 @@ def count_entries_tof(act_list0, act_list1, delta, time):
 		for a0 in act_list0:
 			if a0>a1 and a0-a1<delta and not found:
 				dateE = datetime.datetime.fromtimestamp((a1+time)/1000).strftime('%Y-%m-%d %H:%M:%S')
-				print("Entrata: ",dateE)
+				#print("Entrata: ",dateE)
 				I += 1
 				found = True
 	return I,O
