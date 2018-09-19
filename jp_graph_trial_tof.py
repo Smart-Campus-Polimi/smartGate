@@ -7,8 +7,13 @@ import signal
 import getopt
 import sys
 
+DATA = "18-09-2018"
+PATH = "GT_telefono/18_09/"
+DATE =  "18_09.txt"
+FUSO_ORARIO = 7200000
 
 def just_processing(a, b, TIME):
+
 
 	'''
 	with open('side_a.json') as side_a:
@@ -62,7 +67,6 @@ def just_processing(a, b, TIME):
 	max_ts_tof0 = tof0[-1][0]
 	max_ts_tof1 = tof1[-1][0]
 
-
 	array_support = []
 	for i in range(0,interval):
 	    array_support.append(0);
@@ -80,13 +84,30 @@ def just_processing(a, b, TIME):
 		processing = False
 		return
 
-	plt.plot(uniform_tof1, color='green')
-	green_tof = mlines.Line2D([], [], color='green', label='1')
-	plt.legend(handles=[green_tof])
-	plt.plot(uniform_tof0, color='red')
-	red_tof = mlines.Line2D([], [], color='red', label='0')
-	plt.legend(handles=[red_tof])
-	plt.show();
+	lines = [line.rstrip('\n') for line in open(PATH+DATE)]
+	ingresso = []
+	lista_ingressi = []
+	uscita = []
+	lista_uscite = []
+	#print (max_ts%86400000+FUSO_ORARIO,"<- max ######### min -> ",min_ts%86400000+FUSO_ORARIO)
+	for i in lines:
+		if i[0] == "I" and i[4:14] == DATA:
+
+			millisecondi = sum(int(x) * 60 ** j for j,x in enumerate(reversed(i[16:24].split(":"))))*1000
+			#print ("Analisi: ", millisecondi)
+			if millisecondi >= (min_ts%86400000 + FUSO_ORARIO) and millisecondi <= ((max_ts%86400000) + FUSO_ORARIO):
+				#print("I",millisecondi)
+				lista_ingressi.append(millisecondi-(min_ts%86400000 + FUSO_ORARIO))
+		elif i[0] == "O" and i[5:15] == DATA:
+			millisecondi = sum(int(x) * 60 ** j for j,x in enumerate(reversed(i[17:25].split(":"))))*1000
+			#print ("Analisi: ", millisecondi)
+			if millisecondi >= (min_ts%86400000 + FUSO_ORARIO) and millisecondi <= ((max_ts%86400000) + FUSO_ORARIO):
+				#print("O",millisecondi)
+				lista_uscite.append(millisecondi-(min_ts%86400000 + FUSO_ORARIO))
+	print("------- GROUND TRUTH ---------")
+	print("Entrate ",len(lista_ingressi))
+	print("Uscite ",len(lista_uscite))
+
 
 
 	activation_tof0 = f.activate_tof(uniform_tof0)
@@ -94,9 +115,35 @@ def just_processing(a, b, TIME):
 
 	entrate = 0
 	uscite = 0
-	delta = 1500
-	entrate,uscite = f.count_entries_tof(activation_tof0, activation_tof1,delta, min_ts)
-	print("Entrate ",entrate," Uscite ", uscite)
+	delta = 1000
+	O=0
+	I=0
+	entrate_act = []
+	uscite_act = []
+	entrate,uscite, entrate_act, uscite_act = f.count_entries_tof(activation_tof0, activation_tof1,delta, min_ts, I,O, entrate_act,uscite_act)
+	print("------- RILEVAZIONI ----------")
+	print("Entrate ",entrate,"\nUscite ", uscite)
+
+	plt.figure(1, figsize=(15,8))
+
+	plt.plot(lista_ingressi, [10]*len(lista_ingressi), 'ro', color='plum', label='GT entries')
+
+	plt.plot(lista_uscite, [10]*len(lista_uscite), 'ro', color='green', label='GT exits')
+
+	plt.plot(entrate_act, [100]*len(entrate_act), 'ro', color='blue', label='algorithm entries')
+
+	plt.plot(uscite_act, [100]*len(uscite_act), 'ro', color='black', label='algorithm exits')
+
+	plt.plot(uniform_tof1, color='orange', label='Lato 1')
+
+	plt.plot(uniform_tof0, color='red', label='Lato 0')
+
+	#plt.legend(handles=[green_tof,red_tof,alg_entries,alg_exits,true_exits,true_entries])
+	plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
+
+	plt.show();
+
+
 
 	return 0,0
 	'''

@@ -18,7 +18,7 @@ o = 18			o = 14		o = 10		o = 9
 SECONDO NON PULITO
 
 >>> 26-07
-i = 5			i = 12		i = 12		i = 9+sedia		i = 4		i = 18	
+i = 5			i = 12		i = 12		i = 9+sedia		i = 4		i = 18
 o = 5			o = 10		o = 10		o = 10			o = 7		o = 17
 '''
 
@@ -34,17 +34,18 @@ import csv
 import sys
 import getopt
 
-REAL_IN = 4
-REAL_OUT = 0
+REAL_IN = 2
+REAL_OUT = 2
 actual_values = [REAL_IN, REAL_OUT]
 
 
-ground_truth_date = "13_09"
-ground_truth_time = "15_33"
+ground_truth_date = "18_09"
+ground_truth_time = "09_56"
+
 
 #PATH = "/home/cluster/smartGate/"
-PATH = "/home/daniubo/Scrivania/smartGate/"
-#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+#PATH = "/home/daniubo/Scrivania/smartGate/"
+PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_date+"_part6.json"
 #DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_date+"_part6.json"
 DATA_INPUT_A = PATH + "ground_truth_realistic/"+ ground_truth_date +"/sensors/side_a_"+ground_truth_time+".json"

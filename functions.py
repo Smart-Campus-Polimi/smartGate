@@ -61,11 +61,12 @@ def correcting_errors_tof(data):
 	flag = 1
 	while flag == 1:
 		flag=0
-		for i in range(1,len(data)-1):
+		for i in range(0,len(data)-1):
 			distance = data[i][1]
 			if distance > 1300:
 				data[i][1] = (data[i-1][1]+data[i+1][1])/2
 				flag=1
+
 	return list(data)
 
 '''
@@ -182,15 +183,34 @@ def activate(dat):
 
 	return list(act)
 
+'''
+da aggiungere il fronte di discesa per il controllo tra i due fronti in modo
+tale da eliminare nel conteggio delle attivazioni eventi che durano meno di
+un passaggio normale
+'''
+
 def activate_tof(dat):
 	act = [];
+	deact = [];
+	lista_elim = [];
+	min_mov = 100
+
+
 	for i in range(1, len(dat)):
 		if dat[i-1] == 1200 and dat[i] != 1200:
 			act.append(i)
+		if dat[i-1] != 1200 and dat[i] == 1200:
+			deact.append(i)
+	#print ("act ",len(act))
+	for j in range (0,len(deact)-1):
+		if deact[j]-act[j] < 100:
+			lista_elim.append(j)
+	for x in lista_elim:
+		act.pop(x)
 	#print ('INIZIO\n')
 	#for i in range(0, len(act)-1, 2):
 	#	print (act[i+1] - act[i])
-	#print(len(act))
+	#print("act_del",len(act))
 	return list(act)
 
 
@@ -258,7 +278,7 @@ def uniform_list_tof(support, samples_list, min_ts_side, max_ts_side,global_min_
 	#print("How much zeros at the start: ", global_min_ts-min_ts_side)
 	if min_ts_side > global_min_ts:
 		for m in range (0,min_ts_side-global_min_ts):
-			lista[m] = 0
+			lista[m] = 1200
 	sum_samples = 0
 	#print("###",min_ts_side-global_min_ts)
 	for i in range(0,len(samples_list)-1):
@@ -400,17 +420,18 @@ def signal_handler(signal, frame):
 count entries and exit from tof sensor
 '''
 
-def count_entries_tof(act_list0, act_list1, delta, time):
-	I=0
-	O=0
-	found = False
+def count_entries_tof(act_list0, act_list1, delta, time, I, O,E,U):
 
+	'''
+	found = False
 	for a1 in act_list1:
 		found = False
 		for a0 in act_list0:
 			if a1>=a0 and a1-a0<delta and not found:
 				dateU = datetime.datetime.fromtimestamp((a0+time)/1000).strftime('%Y-%m-%d %H:%M:%S')
-				print("Uscita: ",dateU)
+				act_list0.remove(a0)
+				act_list1.remove(a1)
+				#print("Uscita: ",dateU)
 				O += 1
 				found = True
 	for a1 in act_list1:
@@ -418,10 +439,36 @@ def count_entries_tof(act_list0, act_list1, delta, time):
 		for a0 in act_list0:
 			if a0>a1 and a0-a1<delta and not found:
 				dateE = datetime.datetime.fromtimestamp((a1+time)/1000).strftime('%Y-%m-%d %H:%M:%S')
-				print("Entrata: ",dateE)
+				act_list0.remove(a0)
+				act_list1.remove(a1)
+				#print("Entrata: ",dateE)
 				I += 1
 				found = True
-	return I,O
+	'''
+	for i in range(0,len(act_list1)):
+		for j in range(0,len(act_list0)):
+
+			if act_list1[i]<act_list0[j] and act_list0[j]-act_list1[i] <= delta:
+				E.append(((act_list0[j]+act_list1[i])/2))
+				I += 1
+				#print("########### Ingresso ###########")
+				#print("tof0: "+str(act_list0[j])+"\ttof1: "+str(act_list1[i])+"\n")
+				act_list0.pop(j)
+				act_list1.pop(i)
+				I, O, E, U = count_entries_tof(act_list0, act_list1, delta, time, I, O, E, U)
+				return I, O, E, U;
+
+			elif act_list1[i]>act_list0[j] and act_list1[i]-act_list0[j] <= delta:
+				U.append(((act_list0[j]+act_list1[i])/2))
+				O += 1
+				#print("########### Uscita ###########")
+				#print("tof0: "+str(act_list0[j])+"\ttof1: "+str(act_list1[i])+"\n")
+				act_list0.pop(j)
+				act_list1.pop(i)
+				I, O, E, U = count_entries_tof(act_list0, act_list1, delta, time, I, O, E, U)
+				return I, O, E, U;
+
+	return I,O,E,U
 
 
 
