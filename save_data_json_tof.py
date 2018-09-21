@@ -92,7 +92,7 @@ def on_message(client, userdata, message):
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
 			'''
-			if(len(list_of_dict_tof0) > 60):
+			if(len(list_of_dict_tof0) > 300):
 				flag_a = True
 		elif message.topic == topic_sensors_tof1:
 			#print ("Message received on topic: ", topic_sensors_b)
@@ -113,7 +113,7 @@ def on_message(client, userdata, message):
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
 			'''
-			if(len(list_of_dict_tof1) > 60):
+			if(len(list_of_dict_tof1) > 300):
 				flag_b = True
 		else:
 			print(">>> Errore\n")
@@ -177,12 +177,12 @@ class Dumping_thread(threading.Thread):
 		minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
 		time_file = hour+"_"+minutes
 		try:
-			with open(PATH+"/ground_truth_realistic/18_09/tof/tof0_"+time_file+".json","w") as side_a:
+			with open(PATH+"/ground_truth_realistic/19_09/tof/tof0_"+time_file+".json","w") as side_a:
 				json.dump(self.tof0, side_a)
 		except TypeError as e:
 			print(">>> Errore dump: ", e)
 		try:
-			with open(PATH+"/ground_truth_realistic/18_09/tof/tof1_"+time_file+".json","w") as side_b:
+			with open(PATH+"/ground_truth_realistic/19_09/tof/tof1_"+time_file+".json","w") as side_b:
 				json.dump(self.tof1, side_b)
 		except TypeError as e:
 			print(">>> Errore dump: ", e)

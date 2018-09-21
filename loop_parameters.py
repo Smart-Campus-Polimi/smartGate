@@ -34,22 +34,22 @@ import csv
 import sys
 import getopt
 
-REAL_IN = 3
-REAL_OUT = 2
+REAL_IN = 6
+REAL_OUT = 6
 actual_values = [REAL_IN, REAL_OUT]
 
 
-ground_truth_date = "20_09"
-ground_truth_time = "12_20"
+ground_truth_date = "21_09"
+ground_truth_time = "09_36"
 
 
 #PATH = "/home/cluster/smartGate/"
-PATH = "/home/daniubo/Scrivania/smartGate/"
-#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+#PATH = "/home/daniubo/Scrivania/smartGate/"
+PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_date+"_part6.json"
 #DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_date+"_part6.json"
-DATA_INPUT_A = PATH + "ground_truth_realistic/"+ ground_truth_date +"/sensors/side_a_"+ground_truth_time+".json"
-DATA_INPUT_B = PATH + "ground_truth_realistic/"+ ground_truth_date +"/sensors/side_b_"+ground_truth_time+".json"
+DATA_INPUT_A = PATH + "ground_truth_realistic/"+ ground_truth_date +"/side_a_"+ground_truth_time+".json"
+DATA_INPUT_B = PATH + "ground_truth_realistic/"+ ground_truth_date +"/side_b_"+ground_truth_time+".json"
 
 
 
@@ -61,8 +61,8 @@ PIR = use[1]
 INFRA = use[0]
 
 if PIR == True:
-	var = [600,1000]
-	delta = [800, 1900]
+	var = [800,1000]
+	delta = [1000, 1600]
 	var_jump = 50
 	delta_jump =  50
 	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_pir_results.csv"
