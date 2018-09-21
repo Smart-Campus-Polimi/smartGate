@@ -35,13 +35,13 @@ import sys
 import getopt
 import functions as f
 
-ground_truth_date = "20_09"
-ground_truth_time = "16_1"
+ground_truth_date = "21_09"
+ground_truth_time = "09_21"
 
 
-DATA = "20-09-2018"
-PATH_GT = "GT_telefono/20_09/"
-DATE =  "20_09.txt"
+DATA = "21-09-2018"
+PATH_GT = "GT_telefono/21_09/"
+DATE =  "21_09.txt"
 #PATH = "/home/cluster/smartGate/"
 PATH = "/home/daniubo/Scrivania/smartGate/"
 #PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
