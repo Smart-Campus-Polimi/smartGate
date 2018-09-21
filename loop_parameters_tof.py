@@ -10,10 +10,10 @@ import time
 import csv
 from pathlib import Path
 
-ground_truth_date = "20_09/sensors"
-ground_truth_time = "16_31"
+ground_truth_date = "21_09"
+ground_truth_time = "09_55"
 
-output_date = "20_09"
+output_date = "21_09"
 
 
 #PATH = "/home/cluster/smartGate/"
@@ -68,4 +68,3 @@ else:
 	results_pd = pd.DataFrame(results, columns=['TIME', 'REAL IN', 'IN', 'REAL OUT', 'OUT', 'RMSE', 'MAE', 'ACC. IN', 'ACC.OUT'])
 	print("Ho finito :)")
 	results_pd.to_csv(OUTPUT_PATH, sep='\t')
-

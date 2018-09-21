@@ -265,7 +265,7 @@ def uniform_list(support, samples_list, min_ts_side, max_ts_side,global_min_ts,g
 
 	lista = copy.deepcopy(support)
 	#print("Samples list len: ", len(samples_list))
-	
+
 	#print("How much zeros at the start: ", global_min_ts-min_ts_side)
 	if min_ts_side > global_min_ts:
 		for m in range (0,min_ts_side-global_min_ts):
@@ -504,4 +504,4 @@ def get_ground_truth(path, date, data, min_ts, max_ts):
 	print("------- GROUND TRUTH ---------")
 	print("Entrate ",len(lista_ingressi))
 	print("Uscite ",len(lista_uscite))
-	return len(lista_ingressi),len(lista_uscite)
+	return list(lista_ingressi),list(lista_uscite)
