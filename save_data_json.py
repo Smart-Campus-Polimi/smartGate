@@ -20,8 +20,8 @@ import signal
 PACKET_LOSS = 30496000;
 BROKER_ADDRESS = "10.79.1.176"
 #PATH = "/home/cluster/smartGate/"
-PATH = "/home/daniubo/Scrivania/smartGate/"
-#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+#PATH = "/home/daniubo/Scrivania/smartGate/"
+PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #db = MySQLdb.connect(host="10.79.1.176", user = "root", passwd = "root", db = "smartgateDB_real")
 #cursor = db.cursor()
 
@@ -36,7 +36,7 @@ p0b = [];
 p1b = [];
 
 SIZE = 300
-DATE = "20_09"
+DATE = "21_09"
 
 n_process = 0
 count_a = 0
@@ -83,7 +83,7 @@ def on_message(client, userdata, message):
 			flag_b = False
 		if message.topic == topic_sensors_a:
 			#print ("Message received on topic: ", topic_sensors_a)
-			print("a",  end="", flush=True)
+			print("0",  end="", flush=True)
 			try:
 				with lock:
 					dict_a.update(json.loads(str(message.payload.decode("utf-8"))));
@@ -104,7 +104,7 @@ def on_message(client, userdata, message):
 				flag_a = True
 		elif message.topic == topic_sensors_b:
 			#print ("Message received on topic: ", topic_sensors_b)
-			print("b",  end="", flush=True)
+			print("1",  end="", flush=True)
 			try:
 				with lock:
 					dict_b.update(json.loads(str(message.payload.decode("utf-8"))));
@@ -217,12 +217,12 @@ class Dumping_thread(threading.Thread):
 		minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
 		time_file = hour+"_"+minutes
 		try:
-			with open(PATH+"ground_truth_realistic/"+DATE+"/sensors/side_a_"+time_file+".json","w") as side_a:
+			with open(PATH+"ground_truth_realistic/"+DATE+"/side_a_"+time_file+".json","w") as side_a:
 				json.dump(self.a, side_a)
 		except TypeError as e:
 				print(">>> Errore dump: ", e)
 		try:
-			with open(PATH+"ground_truth_realistic/"+DATE+"/sensors/side_b_"+time_file+".json","w") as side_b:
+			with open(PATH+"ground_truth_realistic/"+DATE+"/side_b_"+time_file+".json","w") as side_b:
 				json.dump(self.b, side_b)
 		except TypeError as e:
 				print(">>> Errore dump: ", e)

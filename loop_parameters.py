@@ -33,21 +33,23 @@ import time
 import csv
 import sys
 import getopt
+<<<<<<< HEAD
 import functions as f
 
 ground_truth_date = "20_09"
 ground_truth_time = "15_46"
 
+
 DATA = "20-09-2018"
 PATH_GT = "GT_telefono/20_09/"
 DATE =  "20_09.txt"
 #PATH = "/home/cluster/smartGate/"
-PATH = "/home/daniubo/Scrivania/smartGate/"
-#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+#PATH = "/home/daniubo/Scrivania/smartGate/"
+PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_date+"_part6.json"
 #DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_date+"_part6.json"
-DATA_INPUT_A = PATH + "ground_truth_realistic/"+ ground_truth_date +"/sensors/side_a_"+ground_truth_time+".json"
-DATA_INPUT_B = PATH + "ground_truth_realistic/"+ ground_truth_date +"/sensors/side_b_"+ground_truth_time+".json"
+DATA_INPUT_A = PATH + "ground_truth_realistic/"+ ground_truth_date +"/side_a_"+ground_truth_time+".json"
+DATA_INPUT_B = PATH + "ground_truth_realistic/"+ ground_truth_date +"/side_b_"+ground_truth_time+".json"
 
 
 
