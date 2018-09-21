@@ -164,6 +164,7 @@ def just_processing(a, b, delta, var, use, TIME):
 			O_pir= max(out_a, out_b);
 
 		if do_graph:
+			'''
 			#GRAPH BUILDER
 			ts_array = np.loadtxt("/home/daniubo/Scrivania/smartGate/appTS/ts_"+TIME+"_csv.csv", dtype = int, delimiter = ",", skiprows=1)
 			ts_in = []
@@ -176,6 +177,7 @@ def just_processing(a, b, delta, var, use, TIME):
 			ts_in = f.from_ms_to_date(ts_in)
 			ts_out = f.from_ms_to_date(ts_out)
 			#print("Qui aggiungere codice per grafici")
+			'''
 			p0a = f.from_ms_to_date(p0a)
 			p0b = f.from_ms_to_date(p0b)
 			p1a = f.from_ms_to_date(p1a)
@@ -189,11 +191,13 @@ def just_processing(a, b, delta, var, use, TIME):
 			orange_pir = mlines.Line2D([],[],color='orange', label='p0b')
 			blue_pir = mlines.Line2D([],[],color='blue', label='p1a')
 			red_pir = mlines.Line2D([],[],color='red', label='p1b')
+			'''
 			plt.plot(*zip(*ts_in), color='black', marker='o', linestyle='dashed')
 			plt.plot(*zip(*ts_out), color='red', marker='x', linestyle='dashed')
 			real_in = mlines.Line2D([],[],color='black', label='real_in')
 			real_out = mlines.Line2D([],[],color='red', label='real_out')
 			plt.legend(handles=[green_pir, orange_pir, blue_pir, red_pir, real_in, real_out])
+			'''
 			plt.title("Real events")
 			plt.show()
 
@@ -272,9 +276,9 @@ def just_processing(a, b, delta, var, use, TIME):
 	if use_pir and use_infra:				#opzione non contemplata
 		return I_pir, O_pir, I_inf, O_inf
 	elif use_pir:
-		return I_pir, O_pir
+		return I_pir, O_pir, min_ts, max_ts
 	elif use_infra:
-		return I_inf, O_inf
+		return I_inf, O_inf, min_ts, max_ts
 	elif use_camera:
 		print("Nothing to return, camera data processed.\n")
 		return 1

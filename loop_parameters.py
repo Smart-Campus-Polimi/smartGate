@@ -33,16 +33,14 @@ import time
 import csv
 import sys
 import getopt
-
-REAL_IN = 3
-REAL_OUT = 2
-actual_values = [REAL_IN, REAL_OUT]
-
+import functions as f
 
 ground_truth_date = "20_09"
-ground_truth_time = "12_20"
+ground_truth_time = "15_46"
 
-
+DATA = "20-09-2018"
+PATH_GT = "GT_telefono/20_09/"
+DATE =  "20_09.txt"
 #PATH = "/home/cluster/smartGate/"
 PATH = "/home/daniubo/Scrivania/smartGate/"
 #PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
@@ -62,7 +60,7 @@ INFRA = use[0]
 
 if PIR == True:
 	var = [600,1000]
-	delta = [800, 1900]
+	delta = [800, 1200]
 	var_jump = 50
 	delta_jump =  50
 	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_pir_results.csv"
@@ -88,8 +86,10 @@ ex = 0
 
 for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 	for v in range(var[0], var[1]+var_jump, var_jump):
-		en, ex = jp.just_processing(a, b, d, v, use, ground_truth_time)
+		en, ex, min_ts, max_ts = jp.just_processing(a, b, d, v, use, ground_truth_time)
 		temp = []
+		REAL_IN, REAL_OUT = f.get_ground_truth(PATH_GT, DATE, DATA, min_ts, max_ts)
+		actual_values = [REAL_IN, REAL_OUT]
 		temp.append(REAL_IN)
 		temp.append(en)
 		temp.append(REAL_OUT)

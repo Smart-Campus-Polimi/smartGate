@@ -8,16 +8,12 @@ import json
 import pandas as pd
 import time
 import csv
-import sys
-import getopt
-
-REAL_IN = 2
-REAL_OUT = 2
-actual_values = [REAL_IN, REAL_OUT]
-
+from pathlib import Path
 
 ground_truth_date = "20_09/sensors"
-ground_truth_time = "12_20"
+ground_truth_time = "16_31"
+
+output_date = "20_09"
 
 #PATH = "/home/cluster/smartGate/"
 PATH = "/home/daniubo/Scrivania/smartGate/"
@@ -39,4 +35,36 @@ ex = 0
 
 
 
-en, ex = jp.just_processing(a, b, ground_truth_time)
+en, ex, real_en, real_ex = jp.just_processing(a, b, ground_truth_time)
+
+actual_values = [real_en, real_ex]
+temp = []
+temp.append(ground_truth_time)
+temp.append(real_en)
+temp.append(en)
+temp.append(real_ex)
+temp.append(ex)
+pred = [en, ex]
+temp.append("%.2f" % sqrt(mean_squared_error(actual_values, pred)))
+temp.append("%.2f" % mean_absolute_error(actual_values, pred))
+if actual_values[0] != 0 and actual_values[1] != 0:
+	acc_in = 100-(abs(en-actual_values[0])/actual_values[0] * 100)
+	acc_out = 100-(abs(ex-actual_values[1])/actual_values[1] * 100)
+	temp.append(acc_in)
+	temp.append(acc_out)
+else:
+	temp.append('NaN')
+	temp.append('NaN')
+
+results.append(temp)
+OUTPUT_PATH = PATH+"output/"+output_date+"/"+output_date+"_tof_results.csv"
+file = Path(OUTPUT_PATH)
+if file.is_file():
+	with open(OUTPUT_PATH, 'a') as partial:
+		writer = csv.writer(partial, delimiter=';')
+		writer.writerow(results)
+else:
+	results_pd = pd.DataFrame(results, columns=['TIME', 'REAL IN', 'IN', 'REAL OUT', 'OUT', 'RMSE', 'MAE', 'ACC. IN', 'ACC.OUT'])
+	print("Ho finito :)")
+	results_pd.to_csv(OUTPUT_PATH, sep='\t')
+
