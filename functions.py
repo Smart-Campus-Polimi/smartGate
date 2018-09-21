@@ -172,6 +172,7 @@ steps are in their magnitude envelope
 '''
 def activate(dat):
 	act = [];
+
 	for i in range(1, len(dat)):
 		if dat[i-1] == 0 and dat[i] == 1:
 			act.append(i)
@@ -220,6 +221,7 @@ build a list with all the 0-1 fronts
 '''
 def activate_infra(dat):
 	act = [];
+	print(dat)
 	for i in range(1, len(dat)):
 		if dat[i-1] == 0 and dat[i] == 1:
 			act.append(i)
@@ -239,27 +241,32 @@ uniformizza le liste avendo un fondo scala comune
 def uniform_list(support, samples_list, min_ts_side, max_ts_side,global_min_ts,global_max_ts):
 
 	lista = copy.deepcopy(support)
-    #print(len(samples_list))
-
-    #print("How much zeros at the start: ", min_ts-min_ts_side)
+	#print("Samples list len: ", len(samples_list))
+	
+	#print("How much zeros at the start: ", global_min_ts-min_ts_side)
 	if min_ts_side > global_min_ts:
 		for m in range (0,min_ts_side-global_min_ts):
 			lista[m] = 0
 	sum_samples = 0
-    #print("###",min_ts_side-min_ts)
+	#print("###",min_ts_side-min_ts)
 	for i in range(0,len(samples_list)-1):
-        #print (i)
 		samples = int(samples_list[i+1][0])-int(samples_list[i][0])
-        #mean = (int(samples_list[i][1])+int(samples_list[i+1][1]))/2
-        #print(mean)
+		'''
+		if samples!=10 and samples!=11:
+			print ("##############################", i)
+			print("Number of samples to add: ", samples)
+		#mean = (int(samples_list[i][1])+int(samples_list[i+1][1]))/2
+			print("Value to insert in those samples: ", samples_list[i][1])
+		'''
 		for j in range (sum_samples,sum_samples+samples):
 			try:
 				lista[j+min_ts_side-global_min_ts]=(int(samples_list[i][1]))
 			except IndexError:
 				print (j+min_ts_side-global_min_ts, "len lista >>> ",len(lista))
 				print("i, sample list: ", i, len(samples_list))
-				print("!!!samples:    ", samples_list)
-				print("The error is: ", Index_error)
+				print("Sample_list(i)(1): ", samples_list[i][1])
+				#print("!!!samples:    ", samples_list)
+				#print("The error is: ", Index_error)
 				print("Happened at time: ",datetime.datetime.now().strftime("%Y-%d-%m %H:%M:%S"))
 				return False
 		sum_samples = sum_samples + samples

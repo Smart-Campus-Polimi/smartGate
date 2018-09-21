@@ -20,8 +20,8 @@ import signal
 PACKET_LOSS = 30496000;
 BROKER_ADDRESS = "10.79.1.176"
 #PATH = "/home/cluster/smartGate/"
-#PATH = "/home/daniubo/Scrivania/smartGate/"
-PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+PATH = "/home/daniubo/Scrivania/smartGate/"
+#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #db = MySQLdb.connect(host="10.79.1.176", user = "root", passwd = "root", db = "smartgateDB_real")
 #cursor = db.cursor()
 
@@ -35,12 +35,15 @@ p1a = [];
 p0b = [];
 p1b = [];
 
+SIZE = 300
+DATE = "20_09"
+
 n_process = 0
 count_a = 0
 count_b = 0
 
-topic_sensors_a = "smartgate/sg1/mls/sa"
-topic_sensors_b = "smartgate/sg1/mls/sb"
+topic_sensors_a = "smartgate/sg1/mls/tof0"
+topic_sensors_b = "smartgate/sg1/mls/tof1"
 topic_camera = "smartgate/sg1/mlc/c"
 list_of_dict_a = []
 list_of_dict_b = []
@@ -97,7 +100,7 @@ def on_message(client, userdata, message):
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
 			'''
-			if(len(list_of_dict_a) > 300):
+			if(len(list_of_dict_a) > SIZE):
 				flag_a = True
 		elif message.topic == topic_sensors_b:
 			#print ("Message received on topic: ", topic_sensors_b)
@@ -118,7 +121,7 @@ def on_message(client, userdata, message):
 			except TypeError as e:
 				print(">>> Errore dump: ", e)
 			'''
-			if(len(list_of_dict_b) > 300):
+			if(len(list_of_dict_b) > SIZE):
 				flag_b = True
 		elif message.topic == topic_camera:
 			#print ("Message received on topic: ", topic_sensors_b)
@@ -156,8 +159,8 @@ class Subscriber_thread(threading.Thread):
 		threading.Thread.__init__(self)
 		self.client_name = "localhost"+str(datetime.datetime.now())
 		self.broker_address = BROKER_ADDRESS;
-		self.topic_sensors_a = "smartgate/sg1/mls/sa"
-		self.topic_sensors_b = "smartgate/sg1/mls/sb"
+		self.topic_sensors_a = "smartgate/sg1/mls/tof0"
+		self.topic_sensors_b = "smartgate/sg1/mls/tof1"
 		self.topic_camera = topic_camera
 
 
@@ -214,12 +217,12 @@ class Dumping_thread(threading.Thread):
 		minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
 		time_file = hour+"_"+minutes
 		try:
-			with open(PATH+"/ground_truth_realistic/13_09/sensors/side_a_"+time_file+".json","w") as side_a:
+			with open(PATH+"ground_truth_realistic/"+DATE+"/sensors/side_a_"+time_file+".json","w") as side_a:
 				json.dump(self.a, side_a)
 		except TypeError as e:
 				print(">>> Errore dump: ", e)
 		try:
-			with open(PATH+"/ground_truth_realistic/13_09/sensors/side_b_"+time_file+".json","w") as side_b:
+			with open(PATH+"ground_truth_realistic/"+DATE+"/sensors/side_b_"+time_file+".json","w") as side_b:
 				json.dump(self.b, side_b)
 		except TypeError as e:
 				print(">>> Errore dump: ", e)
