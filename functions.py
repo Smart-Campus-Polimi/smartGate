@@ -58,14 +58,37 @@ def correcting_errors(data):
 function that removes the errors in the timestamps due to missed packets from ntp server
 '''
 def correcting_errors_tof(data):
-	flag = 1
-	while flag == 1:
-		flag=0
-		for i in range(0,len(data)-1):
-			distance = data[i][1]
-			if distance > 1300:
-				data[i][1] = (data[i-1][1]+data[i+1][1])/2
-				flag=1
+	count_how_many_consecutive_oor = 0
+	count_how_many_oor = 0
+	'''
+	for j in range(0, len(data)):
+		count_oor = 0
+		if data[j][1] > 1300:
+			count_how_many_oor += 1
+			for i in range(j+1, len(data)):
+				if data[i][1] > 1300:
+					count_oor += 1
+		if count_oor >= 2:
+			#print("Limite OOR superato\n")
+			count_how_many_consecutive_oor += 1
+			for k in range(j, j+count_oor):
+				data[k][1] = 1200
+	#print("How many consecutive OOR: ", count_how_many_consecutive_oor)
+	#print("How many OOR: ", count_how_many_oor)
+	'''
+	for i in range(0,len(data)):
+		distance = data[i][1]
+		if i == len(data)-1:
+			data[i][1] = data[i-1][1]
+		elif distance > 1300:
+			#print("Data[i]: ",data[i],"\tData[i+1]: ", data[i+1])
+			data[i][1] = 1200
+	'''
+	for i in range(0,len(data)):
+		distance = data[i][1]
+		if distance > 1300:
+			data[i][1] = 1200
+	'''
 
 	return list(data)
 
@@ -195,8 +218,6 @@ def activate_tof(dat):
 	deact = [];
 	lista_elim = [];
 	min_mov = 100
-
-
 	for i in range(1, len(dat)):
 		if dat[i-1] == 1200 and dat[i] != 1200:
 			act.append(i)
@@ -204,10 +225,12 @@ def activate_tof(dat):
 			deact.append(i)
 	#print ("act ",len(act))
 	for j in range (0,len(deact)-1):
-		if deact[j]-act[j] < 100:
-			lista_elim.append(j)
+		if deact[j]-act[j] < min_mov:
+			lista_elim.append(act[j])
+
 	for x in lista_elim:
-		act.pop(x)
+		#print( x)
+		act.remove(x)
 	#print ('INIZIO\n')
 	#for i in range(0, len(act)-1, 2):
 	#	print (act[i+1] - act[i])
@@ -429,29 +452,6 @@ count entries and exit from tof sensor
 
 def count_entries_tof(act_list0, act_list1, delta, time, I, O,E,U):
 
-	'''
-	found = False
-	for a1 in act_list1:
-		found = False
-		for a0 in act_list0:
-			if a1>=a0 and a1-a0<delta and not found:
-				dateU = datetime.datetime.fromtimestamp((a0+time)/1000).strftime('%Y-%m-%d %H:%M:%S')
-				act_list0.remove(a0)
-				act_list1.remove(a1)
-				#print("Uscita: ",dateU)
-				O += 1
-				found = True
-	for a1 in act_list1:
-		found = False
-		for a0 in act_list0:
-			if a0>a1 and a0-a1<delta and not found:
-				dateE = datetime.datetime.fromtimestamp((a1+time)/1000).strftime('%Y-%m-%d %H:%M:%S')
-				act_list0.remove(a0)
-				act_list1.remove(a1)
-				#print("Entrata: ",dateE)
-				I += 1
-				found = True
-	'''
 	for i in range(0,len(act_list1)):
 		for j in range(0,len(act_list0)):
 
@@ -479,24 +479,29 @@ def count_entries_tof(act_list0, act_list1, delta, time, I, O,E,U):
 
 
 
-''' BETA VERSION
-controlla la presenza/assenza di un possibile trenino di persone
+def get_ground_truth(path, date, data, min_ts, max_ts):
+	lines = [line.rstrip('\n') for line in open(path+date)]
+	ingresso = []
+	lista_ingressi = []
+	uscita = []
+	lista_uscite = []
+	FUSO_ORARIO = 7200000
+	#print (max_ts%86400000+FUSO_ORARIO,"<- max ######### min -> ",min_ts%86400000+FUSO_ORARIO)
+	for i in lines:
+		if i[0] == "I" and i[4:14] == data:
 
-def check_train (begin, end, infra_0, infra_1, infrared_param):
-	count = 0
-	for j in infra_1:
-		if (j>begin and j<end):
-			count = count + 1
-	for k in infra_0:
-		if (k>begin and k<end):
-			count = count + 1
-	#print(count)
-	if count > infrared_param:
-		print(">>> Trenino")
-	else:
-		print(">>> No trenino")
-	if round((count-2)/2) > 0:
-		return round((count-2)/2)
-	else:
-		return 0
-'''
+			millisecondi = sum(int(x) * 60 ** j for j,x in enumerate(reversed(i[16:24].split(":"))))*1000
+			#print ("Analisi: ", millisecondi)
+			if millisecondi >= (min_ts%86400000 + FUSO_ORARIO) and millisecondi <= ((max_ts%86400000) + FUSO_ORARIO):
+				#print("I",millisecondi)
+				lista_ingressi.append(millisecondi-(min_ts%86400000 + FUSO_ORARIO))
+		elif i[0] == "O" and i[5:15] == data:
+			millisecondi = sum(int(x) * 60 ** j for j,x in enumerate(reversed(i[17:25].split(":"))))*1000
+			#print ("Analisi: ", millisecondi)
+			if millisecondi >= (min_ts%86400000 + FUSO_ORARIO) and millisecondi <= ((max_ts%86400000) + FUSO_ORARIO):
+				#print("O",millisecondi)
+				lista_uscite.append(millisecondi-(min_ts%86400000 + FUSO_ORARIO))
+	print("------- GROUND TRUTH ---------")
+	print("Entrate ",len(lista_ingressi))
+	print("Uscite ",len(lista_uscite))
+	return len(lista_ingressi),len(lista_uscite)
