@@ -7,9 +7,9 @@ import signal
 import getopt
 import sys
 
-DATA = "21-09-2018"
-PATH = "GT_telefono/21_09/"
-DATE =  "21_09.txt"
+DATA = "24-09-2018"
+PATH = "GT_telefono/24_09/"
+DATE =  "24_09.txt"
 FUSO_ORARIO = 7200000
 
 def just_processing(a, b, TIME):

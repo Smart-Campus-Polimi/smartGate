@@ -217,7 +217,7 @@ def activate_tof(dat):
 	act = [];
 	deact = [];
 	lista_elim = [];
-	min_mov = 100
+	min_mov = 20
 	for i in range(1, len(dat)):
 		if dat[i-1] == 1200 and dat[i] != 1200:
 			act.append(i)
@@ -227,7 +227,6 @@ def activate_tof(dat):
 	for j in range (0,len(deact)-1):
 		if deact[j]-act[j] < min_mov:
 			lista_elim.append(act[j])
-
 	for x in lista_elim:
 		#print( x)
 		act.remove(x)
@@ -306,6 +305,7 @@ def uniform_list_tof(support, samples_list, min_ts_side, max_ts_side,global_min_
 	#print(len(lista))
 	#print("sample_list:",len(samples_list))
 	#print("How much zeros at the start: ", global_min_ts-min_ts_side)
+	#print("How much zeros at the end: ", global_max_ts-max_ts_side)
 	if min_ts_side > global_min_ts:
 		for m in range (0,min_ts_side-global_min_ts):
 			lista[m] = 1200
@@ -455,7 +455,7 @@ def count_entries_tof(act_list0, act_list1, delta, time, I, O,E,U):
 	for i in range(0,len(act_list1)):
 		for j in range(0,len(act_list0)):
 
-			if act_list1[i]<act_list0[j] and act_list0[j]-act_list1[i] <= delta:
+			if act_list1[i]<=act_list0[j] and act_list0[j]-act_list1[i] <= delta:
 				E.append(((act_list0[j]+act_list1[i])/2))
 				I += 1
 				#print("########### Ingresso ###########")
