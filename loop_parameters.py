@@ -33,22 +33,23 @@ import time
 import csv
 import sys
 import getopt
+<<<<<<< HEAD
 import functions as f
 
-ground_truth_date = "20_09"
-ground_truth_time = "16_1"
+ground_truth_date = "21_09"
+ground_truth_time = "15_46"
 
 
 DATA = "20-09-2018"
 PATH_GT = "GT_telefono/20_09/"
 DATE =  "20_09.txt"
 #PATH = "/home/cluster/smartGate/"
-PATH = "/home/daniubo/Scrivania/smartGate/"
-#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+#PATH = "/home/daniubo/Scrivania/smartGate/"
+PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_date+"_part6.json"
 #DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_date+"_part6.json"
-DATA_INPUT_A = PATH + "ground_truth_realistic/"+ ground_truth_date +"/sensors/side_a_"+ground_truth_time+".json"
-DATA_INPUT_B = PATH + "ground_truth_realistic/"+ ground_truth_date +"/sensors/side_b_"+ground_truth_time+".json"
+DATA_INPUT_A = PATH + "ground_truth_realistic/"+ ground_truth_date +"/side_a_"+ground_truth_time+".json"
+DATA_INPUT_B = PATH + "ground_truth_realistic/"+ ground_truth_date +"/side_b_"+ground_truth_time+".json"
 
 
 
@@ -90,10 +91,10 @@ for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 		en, ex, min_ts, max_ts = jp.just_processing(a, b, d, v, use, ground_truth_time)
 		temp = []
 		REAL_IN, REAL_OUT = f.get_ground_truth(PATH_GT, DATE, DATA, min_ts, max_ts)
-		actual_values = [len(REAL_IN), len(REAL_OUT)]
-		temp.append(len(REAL_IN))
+		actual_values = [REAL_IN, REAL_OUT]
+		temp.append(REAL_IN)
 		temp.append(en)
-		temp.append(len(REAL_OUT))
+		temp.append(REAL_OUT)
 		temp.append(ex)
 		pred = [en, ex]
 		temp.append("%.2f" % sqrt(mean_squared_error(actual_values, pred)))

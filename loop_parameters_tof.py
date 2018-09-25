@@ -10,9 +10,9 @@ import time
 import csv
 from pathlib import Path
 
-ground_truth_date = "21_09"
-ground_truth_time = "09_55"
-
+ground_truth_date = "24_09"
+ground_truth_time = "12_25"
+#3,5
 output_date = "21_09"
 
 
