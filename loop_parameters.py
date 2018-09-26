@@ -35,17 +35,17 @@ import sys
 import getopt
 import functions as f
 
-ground_truth_date = "21_09"
-ground_truth_time = "12_56"
+ground_truth_date = "24_09"
+ground_truth_time = "12_30"
 
 
 
-DATA = "20-09-2018"
-PATH_GT = "GT_telefono/20_09/"
-DATE =  "20_09.txt"
+DATA = "24-09-2018"
+PATH_GT = "GT_telefono/24_09/"
+DATE =  "24_09.txt"
 #PATH = "/home/cluster/smartGate/"
-#PATH = "/home/daniubo/Scrivania/smartGate/"
-PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+PATH = "/home/daniubo/Scrivania/smartGate/"
+#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_date+"_part6.json"
 #DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_date+"_part6.json"
 DATA_INPUT_A = PATH + "ground_truth_realistic/"+ ground_truth_date +"/side_a_"+ground_truth_time+".json"
@@ -61,8 +61,8 @@ PIR = use[1]
 INFRA = use[0]
 
 if PIR == True:
-	var = [950,1200]
-	delta = [950,1200]
+	var = [800,1000]
+	delta = [900,1100]
 	var_jump = 50
 	delta_jump =  50
 	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_pir_results.csv"
@@ -70,8 +70,8 @@ if PIR == True:
 
 elif INFRA == True:
 	#enough_zero = var?
-	var = [4, 10]
-	delta = [1000, 1600]
+	var = [3, 7]
+	delta = [800, 1250]
 	var_jump = 1
 	delta_jump = 50
 	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_inf_results.csv"
@@ -91,10 +91,10 @@ for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 		en, ex, min_ts, max_ts = jp.just_processing(a, b, d, v, use, ground_truth_time)
 		temp = []
 		REAL_IN, REAL_OUT = f.get_ground_truth(PATH_GT, DATE, DATA, min_ts, max_ts)
-		actual_values = [REAL_IN, REAL_OUT]
-		temp.append(REAL_IN)
+		actual_values = [len(REAL_IN), len(REAL_OUT)]
+		temp.append(len(REAL_IN))
 		temp.append(en)
-		temp.append(REAL_OUT)
+		temp.append(len(REAL_OUT))
 		temp.append(ex)
 		pred = [en, ex]
 		temp.append("%.2f" % sqrt(mean_squared_error(actual_values, pred)))

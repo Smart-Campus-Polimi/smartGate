@@ -477,8 +477,6 @@ def count_entries_tof(act_list0, act_list1, delta, time, I, O,E,U):
 
 	return I,O,E,U
 
-
-
 def get_ground_truth(path, date, data, min_ts, max_ts):
 	lines = [line.rstrip('\n') for line in open(path+date)]
 	ingresso = []
