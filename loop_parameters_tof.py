@@ -10,11 +10,11 @@ import time
 import csv
 from pathlib import Path
 
-ground_truth_date = "24_09"
-ground_truth_time = "12_25"
+ground_truth_date = "27_09"
+ground_truth_time = "11_04"
 #3,5
-output_date = "21_09"
-
+output_date = "27_09"
+CM = "normal"
 
 #PATH = "/home/cluster/smartGate/"
 #PATH = "/home/daniubo/Scrivania/smartGate/"
@@ -58,13 +58,13 @@ else:
 	temp.append('NaN')
 
 results.append(temp)
-OUTPUT_PATH = PATH+"output/"+output_date+"/"+output_date+"_tof_results.csv"
+OUTPUT_PATH = PATH+"output/"+output_date+"/"+output_date+CM+"_tof_results.csv"
 file = Path(OUTPUT_PATH)
 if file.is_file():
 	with open(OUTPUT_PATH, 'a') as partial:
-		writer = csv.writer(partial, delimiter=';')
+		writer = csv.writer(partial, delimiter=',')
 		writer.writerow(results)
 else:
 	results_pd = pd.DataFrame(results, columns=['TIME', 'REAL IN', 'IN', 'REAL OUT', 'OUT', 'RMSE', 'MAE', 'ACC. IN', 'ACC.OUT'])
 	print("Ho finito :)")
-	results_pd.to_csv(OUTPUT_PATH, sep='\t')
+	results_pd.to_csv(OUTPUT_PATH, sep=',')

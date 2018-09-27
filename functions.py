@@ -217,7 +217,7 @@ def activate_tof(dat):
 	act = [];
 	deact = [];
 	lista_elim = [];
-	min_mov = 20
+	min_mov = 40
 	for i in range(1, len(dat)):
 		if dat[i-1] == 1200 and dat[i] != 1200:
 			act.append(i)
@@ -233,10 +233,8 @@ def activate_tof(dat):
 	#print ('INIZIO\n')
 	#for i in range(0, len(act)-1, 2):
 	#	print (act[i+1] - act[i])
-	#print("act_del",len(act))
+	#print("Attivazioni sensore: ",len(act))
 	return list(act)
-
-
 
 '''
 build a list with all the 0-1 fronts
@@ -485,7 +483,7 @@ def get_ground_truth(path, date, data, min_ts, max_ts):
 	lista_ingressi = []
 	uscita = []
 	lista_uscite = []
-	FUSO_ORARIO = 7200000
+	FUSO_ORARIO = 7189000
 	#print (max_ts%86400000+FUSO_ORARIO,"<- max ######### min -> ",min_ts%86400000+FUSO_ORARIO)
 	for i in lines:
 		if i[0] == "I" and i[4:14] == data:

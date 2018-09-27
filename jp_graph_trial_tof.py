@@ -7,9 +7,9 @@ import signal
 import getopt
 import sys
 
-DATA = "24-09-2018"
-PATH = "GT_telefono/24_09/"
-DATE =  "24_09.txt"
+DATA = "27-09-2018"
+PATH = "GT_telefono/27_09/"
+DATE =  "27_09.txt"
 FUSO_ORARIO = 7200000
 
 def just_processing(a, b, TIME):
@@ -87,8 +87,9 @@ def just_processing(a, b, TIME):
 	lista_ingressi,lista_uscite = f.get_ground_truth(PATH, DATE, DATA, min_ts, max_ts)
 
 
-
+	#print("--- Lato 0")
 	activation_tof0 = f.activate_tof(uniform_tof0)
+	#print("--- Lato 1")
 	activation_tof1 = f.activate_tof(uniform_tof1)
 
 	entrate = 0

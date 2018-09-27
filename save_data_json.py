@@ -17,6 +17,7 @@ import functions as f
 #import MySQLdb
 import signal
 
+
 PACKET_LOSS = 30496000;
 BROKER_ADDRESS = "10.79.1.176"
 #PATH = "/home/cluster/smartGate/"
@@ -36,7 +37,7 @@ p0b = [];
 p1b = [];
 
 SIZE = 300
-DATE = "24_09"
+DATE = "27_09"
 
 n_process = 0
 count_a = 0
@@ -55,9 +56,7 @@ lock = Lock()
 flag_a = False
 flag_b = False
 
-hour = str(datetime.datetime.now().strftime('%H'))
-minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
-time_file = hour+"_"+minutes
+time_file = datetime.datetime.now().strftime('%H_%M')
 
 def on_message(client, userdata, message):
 		#print("message received, topic: ", message.topic)
@@ -213,9 +212,7 @@ class Dumping_thread(threading.Thread):
 		self.b = b
 
 	def run(self):
-		hour = str(datetime.datetime.now().strftime('%H'))
-		minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
-		time_file = hour+"_"+minutes
+		time_file = datetime.datetime.now().strftime('%H_%M')
 		try:
 			with open(PATH+"ground_truth_realistic/"+DATE+"/side_a_"+time_file+".json","w") as side_a:
 				json.dump(self.a, side_a)

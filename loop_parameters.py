@@ -33,11 +33,11 @@ import time
 import csv
 import sys
 import getopt
-<<<<<<< HEAD
+
 import functions as f
 
-ground_truth_date = "21_09"
-ground_truth_time = "15_46"
+ground_truth_date = "27_09"
+ground_truth_time = "11_21"
 
 
 DATA = "20-09-2018"
@@ -91,10 +91,10 @@ for d in range(delta[0], delta[1]+delta_jump, delta_jump):
 		en, ex, min_ts, max_ts = jp.just_processing(a, b, d, v, use, ground_truth_time)
 		temp = []
 		REAL_IN, REAL_OUT = f.get_ground_truth(PATH_GT, DATE, DATA, min_ts, max_ts)
-		actual_values = [REAL_IN, REAL_OUT]
-		temp.append(REAL_IN)
+		actual_values = [len(REAL_IN), len(REAL_OUT)]
+		temp.append(len(REAL_IN))
 		temp.append(en)
-		temp.append(REAL_OUT)
+		temp.append(len(REAL_OUT))
 		temp.append(ex)
 		pred = [en, ex]
 		temp.append("%.2f" % sqrt(mean_squared_error(actual_values, pred)))
