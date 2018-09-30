@@ -11,14 +11,16 @@ import csv
 from pathlib import Path
 
 ground_truth_date = "27_09"
-ground_truth_time = "11_04"
-#3,5
+ground_truth_time = "16_34"
+#7,12 - 16,13 - 22,16 - 25,28 - 36,35 - 45,39 - 54,47 - 60-51
+
+# _<_ 6,4 - 6,7 - 13,11
 output_date = "27_09"
-CM = "normal"
+CM = "normal_<_"
 
 #PATH = "/home/cluster/smartGate/"
-PATH = "/home/daniubo/Scrivania/smartGate/"
-#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+#PATH = "/home/daniubo/Scrivania/smartGate/"
+PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_date+"_part6.json"
 #DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_date+"_part6.json"
 DATA_INPUT_0 = PATH + "ground_truth_realistic/"+ ground_truth_date +"/side_a_"+ground_truth_time+".json"

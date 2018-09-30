@@ -1,0 +1,4 @@
+,TIME,REAL IN,IN,REAL OUT,OUT,RMSE,MAE,ACC. IN,ACC.OUT
+0,16_23,0,6,0,4,5.10,5.00,NaN,NaN
+"['16_29', 0, 0, 0, 3, '2.12', '1.50', 'NaN', 'NaN']"
+"['16_34', 0, 4, 0, 3, '3.54', '3.50', 'NaN', 'NaN']"
