@@ -5,6 +5,8 @@ import threading
 from threading import Lock
 import schedule
 import json
+import os
+import sys
 import paho.mqtt.client as mqtt
 import copy
 import matplotlib.pyplot as plt
@@ -20,12 +22,12 @@ import signal
 PACKET_LOSS = 30496000;
 BROKER_ADDRESS = "10.79.1.176"
 
-#PATH = "/home/cluster/smartGate/"
+PATH = "/home/cluster/smartGate/"
 #PATH = "/home/daniubo/Scrivania/smartGate/"
-PATH = "/Users/wunagana/Documents/GitHub/smartGate"
+#PATH = "/Users/wunagana/Documents/GitHub/smartGate"
 
 SIZE = 300
-DATE = "01_10"
+DATE = str(datetime.datetime.now().strftime('%d_%m'))
 
 
 #db = MySQLdb.connect(host="10.79.1.176", user = "root", passwd = "root", db = "smartgateDB_real")
@@ -46,7 +48,7 @@ lock = Lock()
 flag_a = False
 
 hour = str(datetime.datetime.now().strftime('%H'))
-minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
+minutes = str(str(datetime.datetime.now().strftime('%M')))
 time_file = hour+"_"+minutes
 
 def on_message(client, userdata, message):
@@ -97,7 +99,7 @@ class Subscriber_thread(threading.Thread):
 		subscriber.subscribe(self.topic_sensors_multiple_tof);
 		print(">>> Subscribed!\n")
 		subscriber.loop_forever()
-
+'''
 class Processer_thread(threading.Thread):
 
 	def __init__(self):
@@ -116,7 +118,7 @@ class Processer_thread(threading.Thread):
 
 
 		return
-
+'''
 class Dumping_thread(threading.Thread):
 
 	def __init__(self, multiple_tof):
@@ -125,8 +127,11 @@ class Dumping_thread(threading.Thread):
 
 	def run(self):
 		hour = str(datetime.datetime.now().strftime('%H'))
-		minutes = str(int(str(datetime.datetime.now().strftime('%M'))))
+		minutes = str(str(datetime.datetime.now().strftime('%M')))
 		time_file = hour+"_"+minutes
+		DATE = str(datetime.datetime.now().strftime('%d_%m')) 
+		make_sure_path_exists(PATH+"/ground_truth_realistic/"+DATE)
+
 		try:
 			with open(PATH+"/ground_truth_realistic/"+DATE+"/multiple_tof_"+time_file+".json","w") as side_a:
 				json.dump(self.multiple_tof, side_a)
@@ -134,6 +139,11 @@ class Dumping_thread(threading.Thread):
 			print(">>> Errore dump: ", e)
 
 		return
+
+
+def make_sure_path_exists(path):
+	if not os.path.exists(path):
+		os.makedirs(path)
 
 def processing():
 
