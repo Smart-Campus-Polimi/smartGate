@@ -10,7 +10,7 @@ import sys
 DATA = "27-09-2018"
 PATH = "GT_telefono/27_09/"
 DATE =  "27_09.txt"
-FUSO_ORARIO = 7200000
+FUSO_ORARIO = 7188000
 
 def just_processing(a, b, TIME):
 
@@ -105,13 +105,13 @@ def just_processing(a, b, TIME):
 
 	plt.figure(1, figsize=(15,8))
 
-	plt.plot(lista_ingressi, [10]*len(lista_ingressi), 'ro', color='plum', label='GT entries')
+	plt.plot(lista_ingressi, [10]*len(lista_ingressi), 'ro', color='blue', label='GT entries')
 
 	plt.plot(lista_uscite, [10]*len(lista_uscite), 'ro', color='green', label='GT exits')
 
 	plt.plot(entrate_act, [100]*len(entrate_act), 'ro', color='blue', label='algorithm entries')
 
-	plt.plot(uscite_act, [100]*len(uscite_act), 'ro', color='black', label='algorithm exits')
+	plt.plot(uscite_act, [100]*len(uscite_act), 'ro', color='green', label='algorithm exits')
 
 	plt.plot(uniform_tof1, color='orange', label='Lato 1')
 
