@@ -99,7 +99,7 @@ def just_processing(a, b, TIME):
 	I=0
 	entrate_act = []
 	uscite_act = []
-	entrate,uscite, entrate_act, uscite_act = f.count_entries_tof(activation_tof0, activation_tof1,delta, min_ts, I,O, entrate_act,uscite_act)
+	entrate,uscite, entrate_act, uscite_act = f.count_entries_tof(activation_tof0, activation_tof1, delta, I, O, entrate_act,uscite_act)
 	print("------- RILEVAZIONI ----------")
 	print("Entrate ",entrate,"\nUscite ", uscite)
 

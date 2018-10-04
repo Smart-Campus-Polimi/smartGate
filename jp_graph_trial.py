@@ -126,6 +126,7 @@ def just_processing(a, b, delta, var, use, TIME):
 	processing = True
 
 	if use_pir:
+		'''
 		uniform_p0a = f.uniform_list(array_support, p0a,min_ts_a,max_ts_a,min_ts,max_ts)
 		if (not uniform_p0a):
 			processing = False
@@ -145,19 +146,25 @@ def just_processing(a, b, delta, var, use, TIME):
 		if (not uniform_p1b):
 			processing = False
 			return
+		'''
 		#print("Lunghezza p1b: ", len(uniform_p1b))
 
 		#pir_mask = f.generate_mask(array_support,uniform_p0a,uniform_p0b,uniform_p1a,uniform_p1b)
 
-		activation_p0a = f.activate(uniform_p0a)
-		activation_p1a = f.activate(uniform_p1a)
-		activation_p0b = f.activate(uniform_p0b)
-		activation_p1b = f.activate(uniform_p1b)
+		activation_p0a = f.activate(p0a)
+		activation_p1a = f.activate(p1a)
+		activation_p0b = f.activate(p0b)
+		activation_p1b = f.activate(p1b)
 
 		#activation_mask = f.activate(pir_mask)
 		if processing:
-			ins_a, out_a = f.count_entries(activation_p1a,activation_p0a,'A', activation_p1b, activation_p0b, delta, span)
-			ins_b, out_b = f.count_entries(activation_p1b,activation_p0b,'B', activation_p1a, activation_p0a, delta, span)
+			#E e U da utilizzare solo se si riescono a mettere i valori rilevati o no dai grafici
+			E_a = []
+			E_b = []
+			U_a = []
+			U_b = []
+			ins_a, out_a, E_a, U_a = f.count_entries(activation_p1a,activation_p0a,'A', activation_p1b, activation_p0b, delta, span)
+			ins_b, out_b, E_b, U_b = f.count_entries(activation_p1b,activation_p0b,'B', activation_p1a, activation_p0a, delta, span)
 
 		if processing:
 			I_pir = max(ins_a, ins_b);
@@ -178,19 +185,20 @@ def just_processing(a, b, delta, var, use, TIME):
 			ts_out = f.from_ms_to_date(ts_out)
 			#print("Qui aggiungere codice per grafici")
 			'''
-			p0a = f.from_ms_to_date(p0a)
-			p0b = f.from_ms_to_date(p0b)
-			p1a = f.from_ms_to_date(p1a)
-			p1b = f.from_ms_to_date(p1b)
-			plt.plot(*zip(*p0a), color='green')
-			plt.plot(*zip(*p0b), color='orange')
-			plt.plot(*zip(*p1a), color='blue')
-			plt.plot(*zip(*p1b), color='red')
+			p0a[0] = f.from_ms_to_date(p0a[0])
+			p0b[0] = f.from_ms_to_date(p0b[0])
+			p1a[0] = f.from_ms_to_date(p1a[0])
+			p1b[0] = f.from_ms_to_date(p1b[0])
+			plt.plot(*zip(*p0a), color='green', label='p0a')
+			plt.plot(*zip(*p0b), color='orange', label='p0b')
+			plt.plot(*zip(*p1a), color='blue', label='p1a')
+			plt.plot(*zip(*p1b), color='red', label='p1b')
+			plt.plot(E_a, [1.5]*len(E_a), 'ro', color='blue', label='algorithm entries A')
+			plt.plot(U_a, [1.5]*len(U_a), 'ro', color='black', label='algorithm exits A')
+			plt.plot(E_b, [1.25]*len(E_b), 'rx', color='blue', label='algorithm entries B')
+			plt.plot(U_b, [1.25]*len(U_b), 'rx', color='black', label='algorithm exits B')
+			plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
 			plt.ylim(-0.2, 2)
-			green_pir = mlines.Line2D([],[],color='green', label='p0a')
-			orange_pir = mlines.Line2D([],[],color='orange', label='p0b')
-			blue_pir = mlines.Line2D([],[],color='blue', label='p1a')
-			red_pir = mlines.Line2D([],[],color='red', label='p1b')
 			'''
 			plt.plot(*zip(*ts_in), color='black', marker='o', linestyle='dashed')
 			plt.plot(*zip(*ts_out), color='red', marker='x', linestyle='dashed')
@@ -198,14 +206,12 @@ def just_processing(a, b, delta, var, use, TIME):
 			real_out = mlines.Line2D([],[],color='red', label='real_out')
 			plt.legend(handles=[green_pir, orange_pir, blue_pir, red_pir, real_in, real_out])
 			'''
-			plt.title("Real events")
+			#plt.title("Real events")
 			plt.show()
 
 	if use_infra:
 		activate_infra_1, infrared_a = f.processing_infrared_2(infrared_a, enough_zero)
 		activate_infra_0, infrared_b = f.processing_infrared_2(infrared_b, enough_zero)
-		#analog_a = f.convert_list_int(analog_a)
-		#analog_b = f.convert_list_int(analog_b)
 
 		uniform_infra_a = f.uniform_list(array_support,infrared_a,min_ts_a,max_ts_a,min_ts,max_ts)
 		if (not uniform_infra_a):
@@ -216,26 +222,15 @@ def just_processing(a, b, delta, var, use, TIME):
 		if (not uniform_infra_b):
 			processing = False
 			return
-		#print("Lunghezza infrared_b: ", len(uniform_infra_b))
-		'''
-		uniform_analog_a = f.uniform_list(array_support,analog_a,min_ts_a,max_ts_a,min_ts,max_ts)
-		if (not uniform_analog_a):
-			processing = False
-			return
-		#print("Lunghezza analog_a: ", len(uniform_analog_a))
-		uniform_analog_b = f.uniform_list(array_support,analog_b,min_ts_b,max_ts_b,min_ts,max_ts)
-		if (not uniform_analog_b):
-			processing = False
-			return
-		'''
-		#print("Lunghezza analog_b: ", len(uniform_analog_b))
-		#activate_infra_1 = f.activate_infra(uniform_infra_a)
-		#activate_infra_0 = f.activate_infra(uniform_infra_b)
 
 		if processing:
 			#print("Processo infrarossi\tLunghezza act_1:",len(activate_infra_1),"\tLunghezza act_0:",len(activate_infra_0),"\n")
-			I_inf,O_inf = f.count_infrared(activate_infra_0,activate_infra_1,delta)
-
+			E = []
+			U = []
+			I_inf = 0
+			O_inf = 0
+			I_inf,O_inf, E, U = f.count_entries_tof(activate_infra_0, activate_infra_1, delta, I_inf, O_inf, E, U)
+			print(">>> Infrared:\tIN:",I_inf,"\tO:",O_inf,"\n")
 		if do_graph:
 			'''
 			ts_array = np.loadtxt("/home/daniubo/Scrivania/smartGate/appTS/ts_"+TIME+"_csv.csv", dtype = int, delimiter = ",", skiprows=1)
@@ -249,14 +244,19 @@ def just_processing(a, b, delta, var, use, TIME):
 			ts_in = f.from_ms_to_date(ts_in)
 			ts_out = f.from_ms_to_date(ts_out)
 			'''
-			infrared_a = f.from_ms_to_date(infrared_a)
-			infrared_b = f.from_ms_to_date(infrared_b)
+			infrared_a[0] = f.from_ms_to_date(infrared_a[0])
+			infrared_b[0] = f.from_ms_to_date(infrared_b[0])
+			E = f.from_ms_to_date(E)
+			U = f.from_ms_to_date(U)
 			# INFRARED
-			plt.plot(*zip(*infrared_a), color='green')
-			green_inf = mlines.Line2D([], [], color='green', label='inf_a')
-			plt.plot(*zip(*infrared_b), color='red')
-			red_inf = mlines.Line2D([], [], color='red', label='inf_b')
-			plt.legend(handles=[green_inf, red_inf])
+			plt.plot(*zip(*infrared_a), color='green', label ='inf_a')
+			#green_inf = mlines.Line2D([], [], color='green', label='inf_a')
+			plt.plot(*zip(*infrared_b), color='red', label='inf_b')
+			#red_inf = mlines.Line2D([], [], color='red', label='inf_b')
+			plt.plot(E, [1.5]*len(E), 'ro', color='blue', label='algorithm entries')
+			plt.plot(U, [1.5]*len(U), 'ro', color='black', label='algorithm exits')
+			plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
+			#plt.legend(handles=[green_inf, red_inf])
 			'''
 			# REAL
 			plt.plot(*zip(*ts_in), color='black', marker='o', linestyle='dashed')
@@ -266,12 +266,11 @@ def just_processing(a, b, delta, var, use, TIME):
 			plt.legend(handles=[green_inf, red_inf, real_in, real_out])
 			'''
 			ylim = (-0.2, 2)
-			plt.title("Infrared")
+			#plt.title("Infrared")
 			plt.show();
 
 
 	#print ('################################\nEffective entries: ', I,'\nEffective Exits: ', O,'\n################################')
-	print("#")
 
 	if use_pir and use_infra:				#opzione non contemplata
 		return I_pir, O_pir, I_inf, O_inf

@@ -110,30 +110,6 @@ def building_time(data, interval):
 	return list(time_vect)
 
 '''
-processing of the infrareds waveform
-def processing_infrared(infrared, enough_zero):
-	index_list = [];
-	for i in range(0,len(infrared)):
-		count = 0;
-		if infrared[i][1] == 1:
-			for j in range(1, len(infrared)-i):
-				if infrared[i+j][1] == 0:
-					count = count +1;
-					if count > enough_zero:
-						index_list.append(infrared[i+j][0])
-				else:
-					break;
-
-	for i in infrared:
-		if i[0] in index_list:
-			i[1] = 1
-		else:
-			i[1] = 0
-
-	return infrared
-'''
-
-'''
 BETA VERSION: alternative way to build a list of activation for infrared samples
 '''
 def processing_infrared_2(infrared, enough_zero):
@@ -197,14 +173,10 @@ def activate(dat):
 	act = [];
 
 	for i in range(1, len(dat)):
-		if dat[i-1] == 0 and dat[i] == 1:
-			act.append(i)
-		elif dat[i-1] == 1 and dat[i] == 0:
-			act.append(i)
-	#print ('INIZIO\n')
-	#for i in range(0, len(act)-1, 2):
-	#	print (act[i+1] - act[i])
-
+		if dat[i-1][1] == 0 and dat[i][1] == 1:
+			act.append((dat[i-1][0]+dat[i][0])/2)
+		elif dat[i-1][1] == 1 and dat[i][1] == 0:
+			act.append((dat[i-1][0]+dat[i][0])/2)
 	return list(act)
 
 '''
@@ -230,10 +202,6 @@ def activate_tof(dat):
 	for x in lista_elim:
 		#print( x)
 		act.remove(x)
-	#print ('INIZIO\n')
-	#for i in range(0, len(act)-1, 2):
-	#	print (act[i+1] - act[i])
-	#print("Attivazioni sensore: ",len(act))
 	return list(act)
 
 '''
@@ -363,7 +331,10 @@ def count_entries(front, back, side, other_side_front, other_side_back, delta, s
 	'''
 	ins = 0
 	out = 0
-
+	g_entries_a = []
+	g_entries_b = []
+	g_exits_a = []
+	g_exits_b = []
 	for i in range(0, len(front)-1, 2):
 		for j in range(0, len(back)-1, 2):
 			#print ('Ingresso esaminato: ', front[i])
@@ -384,71 +355,38 @@ def count_entries(front, back, side, other_side_front, other_side_back, delta, s
 					if 'A' == side:
 						if matched_entries(zero_up, one_up, other_side_back, other_side_front, span) == 1:
 							#print (">>> !! LATO A: Valori trovati, confermo entrata !!\n")
-							ins = ins + 1;
-
+							ins = ins + 1
+							g_entries_a.append((zero_up+one_up)/2)
 					elif 'B' == side:
 						if matched_entries(zero_up, one_up, other_side_back, other_side_front, span) == 1:
 							#print (">>> !! LATO B: Valori trovati, confermo entrata !!\n")
-							ins = ins + 1;
-
+							ins = ins + 1
+							g_entries_b.append((zero_up+one_up)/2)
 				elif zero_up < one_up:
 					#print(">>> Sto uscendo\n")
 
 					if 'A' == side:
 						if matched_entries(one_up, zero_up, other_side_front, other_side_back, span) == 1:
 							#print (">>> !! LATO A: Valori trovati, confermo uscita !!\n")
-							out = out + 1;
-
+							out = out + 1
+							g_exits_a.append((zero_up+one_up)/2)
 					elif 'B' == side:
 						if matched_entries(one_up, zero_up, other_side_front, other_side_back, span) == 1:
 							#print (">>> !! LATO B: Valori trovati, confermo uscita !!\n")
-							out = out + 1;
-
+							out = out + 1
+							g_exits_b.append((zero_up+one_up)/2)
 
 	print ('Side: ', side,' In: ', ins,' Out: ', out);
-	return ins, out
+	if side == 'A':
+		return ins, out, g_entries_a, g_exits_a
+	elif side == 'B':
+		return ins, out, g_entries_b, g_exits_b
 
-'''
-count entries for infrared sensors
-'''
-def count_infrared(activate_infra_0, activate_infra_1, delta):
-	I=0
-	O=0
-	found = False
-	#print(activate_infra_0)
-	#print('##########################')
-	#print(activate_infra_1)
-	for a1 in activate_infra_1:
-		found = False
-		for a0 in activate_infra_0:
-			if a1>a0 and a1-a0<delta and not found:
-				O += 1
-				found = True
-	for a1 in activate_infra_1:
-		found = False
-		for a0 in activate_infra_0:
-			if a0>a1 and a0-a1<delta and not found:
-				I += 1
-				found = True
-	print ('Infrared:\tIn: ', I,' Out: ', O);
-
-	return I,O
-
-# convert timestamp from ms to dates for graphs
-def from_ms_to_date(data):
-	for element in data:
-		element[0] = str(datetime.datetime.fromtimestamp(element[0]//1000.0))[11:]
-	return data
-
-def signal_handler(signal, frame):
-	print("\n>>> Exit!")
-	sys.exit(0)
 
 '''
 count entries and exit from tof sensor
 '''
-
-def count_entries_tof(act_list0, act_list1, delta, time, I, O,E,U):
+def count_entries_tof(act_list0, act_list1, delta, I, O, E, U):
 
 	for i in range(0,len(act_list1)):
 		for j in range(0,len(act_list0)):
@@ -460,7 +398,7 @@ def count_entries_tof(act_list0, act_list1, delta, time, I, O,E,U):
 				#print("tof0: "+str(act_list0[j])+"\ttof1: "+str(act_list1[i])+"\n")
 				act_list0.pop(j)
 				act_list1.pop(i)
-				I, O, E, U = count_entries_tof(act_list0, act_list1, delta, time, I, O, E, U)
+				I, O, E, U = count_entries_tof(act_list0, act_list1, delta, I, O, E, U)
 				return I, O, E, U;
 
 			elif act_list1[i]>act_list0[j] and act_list1[i]-act_list0[j] <= delta:
@@ -470,7 +408,7 @@ def count_entries_tof(act_list0, act_list1, delta, time, I, O,E,U):
 				#print("tof0: "+str(act_list0[j])+"\ttof1: "+str(act_list1[i])+"\n")
 				act_list0.pop(j)
 				act_list1.pop(i)
-				I, O, E, U = count_entries_tof(act_list0, act_list1, delta, time, I, O, E, U)
+				I, O, E, U = count_entries_tof(act_list0, act_list1, delta, I, O, E, U)
 				return I, O, E, U;
 
 	return I,O,E,U
@@ -501,3 +439,42 @@ def get_ground_truth(path, date, data, min_ts, max_ts):
 	print("Entrate ",len(lista_ingressi))
 	print("Uscite ",len(lista_uscite))
 	return list(lista_ingressi),list(lista_uscite)
+
+# convert timestamp from ms to dates for graphs
+def from_ms_to_date(data):
+	for element in data:
+		element = str(datetime.datetime.fromtimestamp(element//1000.0))[11:]
+	return data
+
+# function to manage the forced stop of the program
+def signal_handler(signal, frame):
+	print("\n>>> Exit!")
+	sys.exit(0)
+
+
+'''
+def count_infrared(activate_infra_0, activate_infra_1, delta, I, O, E, U):
+	I=0
+	O=0
+	graph_entries = []
+	graph_exits = []
+	found = False
+	#print(activate_infra_0)
+	#print('##########################')
+	#print(activate_infra_1)
+	for a1 in activate_infra_1:
+		for a0 in activate_infra_0:
+			if a0>a1 and a0-a1<delta and not found:
+				graph_entries.append((a0+a1)/2)
+				I += 1
+
+	for a1 in activate_infra_1:
+		for a0 in activate_infra_0:
+			if a1>a0 and a1-a0<delta:
+				graph_exits.append((a0+a1)/2)
+				O += 1
+	
+	print ('Infrared:\tIn: ', I,' Out: ', O);
+
+	return I, O, graph_entries, graph_exits
+'''
