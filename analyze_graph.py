@@ -11,8 +11,9 @@ PIR = use[1]
 INFRA = use[0]
 
 DATE = "27_09"
-PATH = "/home/daniubo/Scrivania/Git/smartGate/"
-TIME = "10_29"
+#PATH = "/home/daniubo/Scrivania/Git/smartGate/"
+PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+TIME = "11_31"
 DATA_INPUT_A = PATH + "ground_truth_realistic/"+ DATE + "/side_a_" + TIME + ".json"
 DATA_INPUT_B = PATH + "ground_truth_realistic/"+ DATE + "/side_b_" + TIME + ".json"
 
@@ -38,8 +39,3 @@ if INFRA:
 print("--------------- TOF EXECUTION ---------------\n")
 en, ex, real_en, real_ex = jp_tof.just_processing(a, b, TIME)
 print("---------------------------------------------\n")
-
-
-
-
-
