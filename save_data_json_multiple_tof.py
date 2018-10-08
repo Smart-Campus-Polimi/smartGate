@@ -1,6 +1,8 @@
-'''
-Trying to put all togheter and share the resources
-'''
+# HOW TO USE
+# quando viene chiamato da terminale e' necessario inserire il numero del topic 
+# come parametro da riga di comando:
+# --> il numero inserito corrisponde al numero scritto sul gate
+
 import threading
 from threading import Lock
 import schedule
@@ -18,7 +20,6 @@ from copy import deepcopy
 import functions as f
 #import MySQLdb
 import signal
-
 PACKET_LOSS = 30496000;
 BROKER_ADDRESS = "10.79.1.176"
 
@@ -38,7 +39,7 @@ multiple_tof = [];
 n_process = 0
 count_multiple_tof = 0
 
-topic_sensors_multiple_tof = "smartgate/sg1/mls/multiple_tof"
+topic_sensors_multiple_tof = "smartgate/sg"+sys.argv[1]+"/mls/multiple_tof"
 list_of_dict_multiple_tof = []
 dict_multiple_tof = {}
 
@@ -99,26 +100,7 @@ class Subscriber_thread(threading.Thread):
 		subscriber.subscribe(self.topic_sensors_multiple_tof);
 		print(">>> Subscribed!\n")
 		subscriber.loop_forever()
-'''
-class Processer_thread(threading.Thread):
 
-	def __init__(self):
-		threading.Thread.__init__(self)
-
-
-	def run(self):
-		global dict_multiple_tof, list_of_dict_multiple_tof
-
-		#print (list_of_dict_b)
-		print (">>> Thread processing started...")
-		with lock:
-			with open("side_multiple_tof.json","w") as side_tof0:
-				json.dump(list_of_dict_multiple_tof, side_multiple_tof)
-
-
-
-		return
-'''
 class Dumping_thread(threading.Thread):
 
 	def __init__(self, multiple_tof):
