@@ -1,27 +1,7 @@
-'''
->>> 17-07
-i = 23
-o = 23
-
->>> 19-07
-- ora: 14
-i = 21 (+/-2)
-o = 17 (+/-2)
-
->>> 23-07
-i = 17
-o = 13
-
->>> 24-07
-i = 17			i = 9		i = 11		i = 8
-o = 18			o = 14		o = 10		o = 9
-SECONDO NON PULITO
-
->>> 26-07
-i = 5			i = 12		i = 12		i = 9+sedia		i = 4		i = 18
-o = 5			o = 10		o = 10		o = 10			o = 7		o = 17
-'''
-
+# HOW TO USE
+# Inserire le opportune date e orari e da terminale attivare le opzioni per i sensori 
+# che si desiderare analizzare. Questo programma è per l'analisi di PIR e TOF. 
+# Necessario inserire i parametri per l'analisi.
 import jp_graph_trial as jp
 from functions import parse_args
 from sklearn.metrics import mean_squared_error
@@ -37,15 +17,15 @@ import getopt
 import functions as f
 
 ground_truth_date = "27_09"
-ground_truth_time = "11_21"
+ground_truth_time = "12_02"
 
 
 
-DATA = "24-09-2018"
-PATH_GT = "GT_telefono/24_09/"
-DATE =  "24_09.txt"
+DATA = "27-09-2018"
+PATH_GT = "GT_telefono/"+ground_truth_date+"/"
+DATE =  "27_09.txt"
 #PATH = "/home/cluster/smartGate/"
-PATH = "/home/daniubo/Scrivania/smartGate/"
+PATH = "/home/daniubo/Scrivania/Git/smartGate/"
 #PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_date+"_part6.json"
 #DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_date+"_part6.json"
@@ -66,17 +46,17 @@ if PIR == True:
 	delta = [900,1100]
 	var_jump = 50
 	delta_jump =  50
-	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_pir_results.csv"
-	OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_pir_partials.csv"
+	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"/pir/"+ground_truth_time+"_pir_results.csv"
+	OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"/pir/"+ground_truth_time+"_pir_partials.csv"
 
 elif INFRA == True:
 	#enough_zero = var?
 	var = [3, 7]
-	delta = [800, 1250]
+	delta = [800, 1150]
 	var_jump = 1
 	delta_jump = 50
-	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_inf_results.csv"
-	OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"/"+ground_truth_time+"_inf_partials.csv"
+	OUTPUT_PATH = PATH+"output/"+ground_truth_date+"/inf/"+ground_truth_time+"_inf_results.csv"
+	OUTPUT_PATH_PARTIAL = PATH+"output/"+ground_truth_date+"/inf/"+ground_truth_time+"_inf_partials.csv"
 
 
 with open(DATA_INPUT_A) as side_a:
