@@ -16,7 +16,7 @@ import glob
 use = parse_args()
 TOF = use[5]
 
-DATE = "06_10"
+DATE = "09_10"
 PATH = "/home/daniubo/Scrivania/Git/smartGate/"
 #PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #DATA_INPUT_A = PATH + "ground_truth_realistic/"+ DATE + "/side_a_" + TIME + ".json"
@@ -36,10 +36,18 @@ for f in files:
 	m = f[83:85]
 	TIME = f[80:85]
 	print("Execution @"+h+":"+m)
-	en, ex, real_en, real_ex = jp.just_processing(a, a, 0, 0, use, TIME)
-	print("---------------------------------------------\n")
-	results = []
-	results.append([h+":"+m, en, ex])
+	try:
+		en, ex, real_en, real_ex = jp.just_processing(a, a, 0, 0, use, TIME)
+		print("---------------------------------------------\n")
+		results = []
+		results.append([h+":"+m, en, ex])
+	except TypeError:
+		print("--------------------------------------------")
+		print("----------------- ERROR --------------------")
+		print("------- Pass to the next 5 minutes ---------")
+	
+	'''
 	with open(OUTPUT_PATH+DATE+"_all_flux.csv", 'a') as partial:
 			writer = csv.writer(partial, delimiter=';')
 			writer.writerow(results)
+	'''

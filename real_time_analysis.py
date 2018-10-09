@@ -28,11 +28,16 @@ def analysis():
 		#print("File analizzato: ", files)
 		with open(files[0]) as side_a:
 			a = json.load(side_a)
-		h = f[80:82]
-		m = f[83:85]
-		TIME = f[80:85]
+		h = files[0][80:82]
+		m = files[0][83:85]
+		TIME = files[0][80:85]
 		print("Execution @"+h+":"+m)
-		en, ex, real_en, real_ex = jp.just_processing(a, a, 0, 0, use, TIME)
+		try:
+			en, ex, real_en, real_ex = jp.just_processing(a, a, 0, 0, use, TIME)
+		except TypeError:
+			print("--------------------------------------------")
+			print("----------------- ERROR --------------------")
+			print("------- Pass to the next 5 minutes ---------")
 		os.rename(PATH+"ground_truth_realistic/"+DATE+"/"+files[0][67:], PATH+"ground_truth_realistic/"+DATE+"_analyzed/"+files[0][67:])
 		return 1
 
