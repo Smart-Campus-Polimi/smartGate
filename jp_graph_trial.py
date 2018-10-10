@@ -10,9 +10,9 @@ import getopt
 import sys
 import csv
 
-DATA = "27-09-2018"
-PATH = "GT_telefono/27_09/"
-DATE =  "27_09.txt"
+DATA = "09-10-2018"
+PATH = "GT_telefono/09_10/"
+DATE =  "09_10.txt"
 FUSO_ORARIO = 7188000
 OUTPUT_PATH_INFRA_TS = "/home/daniubo/Scrivania/Git/smartGate/analysis/match_analysis/"
 OUTPUT_PATH_PIR_TS = "/home/daniubo/Scrivania/Git/smartGate/analysis/match_analysis/"

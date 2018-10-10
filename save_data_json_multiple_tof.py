@@ -23,8 +23,8 @@ import signal
 PACKET_LOSS = 30496000;
 BROKER_ADDRESS = "10.79.1.176"
 
-PATH = "/home/cluster/smartGate/"
-#PATH = "/home/daniubo/Scrivania/smartGate/"
+#PATH = "/home/cluster/smartGate/"
+PATH = "/home/daniubo/Scrivania/Git/smartGate/"
 #PATH = "/Users/wunagana/Documents/GitHub/smartGate"
 
 SIZE = 300
