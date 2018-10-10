@@ -14,7 +14,7 @@ function to decide which sensor to analize based on input parameters
 def parse_args():
 	try:
 		print(sys.argv[1:])
-		opts, args = getopt.getopt(sys.argv[1:], "ipcg", ["infra=", "pir=", "camera=", "graph="])
+		opts, args = getopt.getopt(sys.argv[1:], "ipcgmtsd", ["infra=", "pir=", "camera=", "graph=", "match=", "tof=", "single=", 'double='])
 	except getopt.GetoptError as e:
 		print(e)
 		sys.exit(0)
@@ -23,6 +23,10 @@ def parse_args():
 	p = False
 	c = False
 	g = False
+	m = False
+	t = False
+	s = False
+	d = False
 
 	for o,a in opts:
 		if o == "-i":
@@ -37,10 +41,22 @@ def parse_args():
 		elif o == "-g":
 			g = True
 			print("graph enabled")
+		elif o == "-m":
+			m = True
+			print("match enabled")
+		elif o == "-t":
+			t = True
+			print("tof enabled")
+		elif o == "-s":
+			s = True
+			print("single tof enabled")
+		elif o == "-d":
+			d = True
+			print("double tof enabled")
 		else:
 			assert False, "unhandled option"
 
-	return [i,p,c,g]
+	return [i,p,c,g,m,t,s,d]
 
 
 '''
@@ -60,22 +76,6 @@ function that removes the errors in the timestamps due to missed packets from nt
 def correcting_errors_tof(data):
 	count_how_many_consecutive_oor = 0
 	count_how_many_oor = 0
-	'''
-	for j in range(0, len(data)):
-		count_oor = 0
-		if data[j][1] > 1300:
-			count_how_many_oor += 1
-			for i in range(j+1, len(data)):
-				if data[i][1] > 1300:
-					count_oor += 1
-		if count_oor >= 2:
-			#print("Limite OOR superato\n")
-			count_how_many_consecutive_oor += 1
-			for k in range(j, j+count_oor):
-				data[k][1] = 1200
-	#print("How many consecutive OOR: ", count_how_many_consecutive_oor)
-	#print("How many OOR: ", count_how_many_oor)
-	'''
 	for i in range(0,len(data)):
 		distance = data[i][1]
 		if i == len(data)-1:
@@ -83,12 +83,6 @@ def correcting_errors_tof(data):
 		elif distance > 1300:
 			#print("Data[i]: ",data[i],"\tData[i+1]: ", data[i+1])
 			data[i][1] = 1200
-	'''
-	for i in range(0,len(data)):
-		distance = data[i][1]
-		if distance > 1300:
-			data[i][1] = 1200
-	'''
 
 	return list(data)
 
@@ -193,7 +187,7 @@ def activate_tof(dat):
 	for i in range(1, len(dat)):
 		if dat[i-1] == 1200 and dat[i] != 1200:
 			act.append(i)
-		if dat[i-1] != 1200 and dat[i] == 1200:
+		if dat[i-1] != 1200 and dat[i]== 1200:
 			deact.append(i)
 	#print ("act ",len(act))
 	for j in range (0,len(deact)-1):
@@ -223,47 +217,7 @@ def convert_list_int(list):
         list[i][1]=int(list[i][1]);
     return list
 
-'''
-uniformizza le liste avendo un fondo scala comune
-'''
-def uniform_list(support, samples_list, min_ts_side, max_ts_side,global_min_ts,global_max_ts):
 
-	lista = copy.deepcopy(support)
-	#print("Samples list len: ", len(samples_list))
-
-	#print("How much zeros at the start: ", global_min_ts-min_ts_side)
-	if min_ts_side > global_min_ts:
-		for m in range (0,min_ts_side-global_min_ts):
-			lista[m] = 0
-	sum_samples = 0
-	#print("###",min_ts_side-min_ts)
-	for i in range(0,len(samples_list)-1):
-		samples = int(samples_list[i+1][0])-int(samples_list[i][0])
-		'''
-		if samples!=10 and samples!=11:
-			print ("##############################", i)
-			print("Number of samples to add: ", samples)
-		#mean = (int(samples_list[i][1])+int(samples_list[i+1][1]))/2
-			print("Value to insert in those samples: ", samples_list[i][1])
-		'''
-		for j in range (sum_samples,sum_samples+samples):
-			try:
-				lista[j+min_ts_side-global_min_ts]=(int(samples_list[i][1]))
-			except IndexError:
-				print (j+min_ts_side-global_min_ts, "len lista >>> ",len(lista))
-				print("i, sample list: ", i, len(samples_list))
-				print("Sample_list(i)(1): ", samples_list[i][1])
-				#print("!!!samples:    ", samples_list)
-				#print("The error is: ", Index_error)
-				print("Happened at time: ",datetime.datetime.now().strftime("%Y-%d-%m %H:%M:%S"))
-				return False
-		sum_samples = sum_samples + samples
-    #print("How much zeros at the end: ", max_ts-max_ts_side)
-	if max_ts_side < global_max_ts:
-		for k in range (max_ts_side,global_max_ts-max_ts_side):
-			lista[k]=0
-    #print (len(lista))
-	return list(lista)
 
 def uniform_list_tof(support, samples_list, min_ts_side, max_ts_side,global_min_ts,global_max_ts):
 
@@ -308,6 +262,44 @@ def uniform_list_tof(support, samples_list, min_ts_side, max_ts_side,global_min_
 		if lista[i] > 1000 and lista[i] <1300:
 			lista[i] = 1200
 	return list(lista)
+
+'''
+def uniform_list_tof_2(support, samples_list, min_ts_side, max_ts_side,global_min_ts,global_max_ts):
+
+	lista = copy.deepcopy(support)
+	lista_append = []
+	#print(len(lista))
+	#print("sample_list:",len(samples_list))
+	
+	if min_ts_side > global_min_ts:
+		for m in range (0,min_ts_side-global_min_ts):
+			print("Aggiunto all'inizio,", m)
+			lista_append.append(1200)
+	sum_samples = 0
+	#print("###",min_ts_side-global_min_ts)
+	for s in range(0, len(samples_list)-1):
+		for i in range(samples_list[s][0], samples_list[s+1][0]):
+			lista_append.append(int(samples_list[s][1]))
+
+	#print("How much zeros at the end: ", global_max_ts-max_ts_side)
+	if max_ts_side < global_max_ts:
+		for k in range (0,global_max_ts-max_ts_side):
+			print("Aggiunto alla fine,", k)
+			lista_append.append(1200)
+	#print (lista)
+
+	for i in range(0,len(lista_append)):
+		if lista_append[i] > 1000 and lista_append[i] <1300:
+			lista_append[i] = 1200
+	#print(lista_append)
+	print(len(lista), len(lista_append))
+	print("differenza:", len(lista_append) - len(lista))
+	print("How much zeros at the start: ", global_min_ts-min_ts_side)
+	print("How much zeros at the end: ", global_max_ts-max_ts_side)
+	for r in range(0, len(lista_append) - len(lista)):
+		lista_append.pop(0)
+	return list(lista_append)
+'''
 '''
 genera maschera per analisi del trenino
 '''
@@ -442,14 +434,35 @@ def get_ground_truth(path, date, data, min_ts, max_ts):
 
 # convert timestamp from ms to dates for graphs
 def from_ms_to_date(data):
-	for element in data:
-		element = str(datetime.datetime.fromtimestamp(element//1000.0))[11:]
-	return data
+	return str(datetime.datetime.fromtimestamp(data//1000.0))[11:]
 
 # function to manage the forced stop of the program
 def signal_handler(signal, frame):
 	print("\n>>> Exit!")
 	sys.exit(0)
+
+# function to update TOF data with INFRA data
+def cross_check(TOF, INF, full):
+	for t in range(0, len(TOF)):
+		for i in range(0, len(INF)):
+			if abs(TOF[t][0]-INF[i][0]) <= 300:
+				#print("Intervalli considerati:\nTOF: ", TOF[t][0], "\tINF: ", INF[i][0],"\n")
+				INF.pop(i)
+				TOF.pop(t)
+				cross_check(TOF, INF, full)
+				return full
+
+	for i in INF:
+		#print(">>> Aggiunto infrarosso!\n")
+		#print("\tTS:",i[0])
+		if i[1] == 1.5:
+			#print("Ingresso")
+			full.append([i[0], 1])
+		elif i[1] == 3.5:
+			#print("Uscita")
+			full.append([i[0], 3])
+	return full.sort()
+
 
 
 '''
@@ -477,4 +490,46 @@ def count_infrared(activate_infra_0, activate_infra_1, delta, I, O, E, U):
 	print ('Infrared:\tIn: ', I,' Out: ', O);
 
 	return I, O, graph_entries, graph_exits
+
+
+#uniformizza le liste avendo un fondo scala comune
+def uniform_list(support, samples_list, min_ts_side, max_ts_side,global_min_ts,global_max_ts):
+
+	lista = copy.deepcopy(support)
+	#print("Samples list len: ", len(samples_list))
+
+	#print("How much zeros at the start: ", global_min_ts-min_ts_side)
+	if min_ts_side > global_min_ts:
+		for m in range (0,min_ts_side-global_min_ts):
+			lista[m] = 0
+	sum_samples = 0
+	#print("###",min_ts_side-min_ts)
+	for i in range(0,len(samples_list)-1):
+		samples = int(samples_list[i+1][0])-int(samples_list[i][0])
+		
+		#if samples!=10 and samples!=11:
+		#	print ("##############################", i)
+		#	print("Number of samples to add: ", samples)
+		#mean = (int(samples_list[i][1])+int(samples_list[i+1][1]))/2
+		#	print("Value to insert in those samples: ", samples_list[i][1])
+		
+		for j in range (sum_samples,sum_samples+samples):
+			try:
+				lista[j+min_ts_side-global_min_ts]=(int(samples_list[i][1]))
+			except IndexError:
+				print (j+min_ts_side-global_min_ts, "len lista >>> ",len(lista))
+				print("i, sample list: ", i, len(samples_list))
+				print("Sample_list(i)(1): ", samples_list[i][1])
+				#print("!!!samples:    ", samples_list)
+				#print("The error is: ", Index_error)
+				print("Happened at time: ",datetime.datetime.now().strftime("%Y-%d-%m %H:%M:%S"))
+				return False
+		sum_samples = sum_samples + samples
+    #print("How much zeros at the end: ", max_ts-max_ts_side)
+	if max_ts_side < global_max_ts:
+		for k in range (max_ts_side,global_max_ts-max_ts_side):
+			lista[k]=0
+    #print (len(lista))
+	return list(lista)
+
 '''

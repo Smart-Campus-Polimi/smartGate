@@ -1,5 +1,5 @@
 
-import jp_graph_trial_tof as jp
+import jp_graph_trial as jp
 from functions import parse_args
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import mean_absolute_error
@@ -11,7 +11,7 @@ import csv
 from pathlib import Path
 
 ground_truth_date = "27_09"
-ground_truth_time = "16_34"
+ground_truth_time = "10_14"
 #7,12 - 16,13 - 22,16 - 25,28 - 36,35 - 45,39 - 54,47 - 60-51
 
 # _<_ 6,4 - 6,7 - 13,11
@@ -19,8 +19,8 @@ output_date = "27_09"
 CM = "normal_<_"
 
 #PATH = "/home/cluster/smartGate/"
-#PATH = "/home/daniubo/Scrivania/smartGate/"
-PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
+PATH = "/home/daniubo/Scrivania/Git/smartGate/"
+#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #DATA_INPUT_A = PATH + "ground_truth_realistic/side_a_"+ground_truth_date+"_part6.json"
 #DATA_INPUT_B = PATH + "ground_truth_realistic/side_b_"+ground_truth_date+"_part6.json"
 DATA_INPUT_0 = PATH + "ground_truth_realistic/"+ ground_truth_date +"/side_a_"+ground_truth_time+".json"
@@ -35,10 +35,12 @@ with open(DATA_INPUT_1) as side_b:
 
 en = 0
 ex = 0
+d = 0
+v = 0
 
+use = parse_args()
 
-
-en, ex, real_en, real_ex = jp.just_processing(a, b, ground_truth_time)
+en, ex, real_en, real_ex = jp.just_processing(a, b, d, v, use, ground_truth_time)
 
 actual_values = [real_en, real_ex]
 temp = []
