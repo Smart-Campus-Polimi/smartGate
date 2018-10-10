@@ -52,19 +52,10 @@ for f in files:
 		print("--------------------------------------------")
 		print("----------------- ERROR --------------------")
 		print("------- Pass to the next 5 minutes ---------")
-
-	results.append([h+":"+m, len(real_en), en, len(real_ex), ex])
+	results = []
+	results.append([h+":"+m, real_en, en, real_ex, ex])
+	'''
 	with open(OUTPUT_PATH+DATE+"_all_flux.csv", 'a') as partial:
 		writer = csv.writer(partial, delimiter=';')
 		writer.writerow(results)
-
-'''
-ing = 0
-out = 0
-for e in results:
-	ing = ing + e[1]
-	out = out + e[2]
-print("-----------------Total events-----------------")
-print("IN: ", out)
-print("OUT: ", ing)
-'''
+	'''

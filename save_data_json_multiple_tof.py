@@ -88,7 +88,7 @@ class Subscriber_thread(threading.Thread):
 		threading.Thread.__init__(self)
 		self.client_name = "localhost"+str(datetime.datetime.now())
 		self.broker_address = BROKER_ADDRESS;
-		self.topic_sensors_multiple_tof = "smartgate/sg1/mls/multiple_tof"
+		self.topic_sensors_multiple_tof = topic_sensors_multiple_tof
 
 	def run(self):
 		subscriber = mqtt.Client(self.client_name);
