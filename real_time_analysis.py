@@ -6,10 +6,15 @@ import jp_graph_trial as jp
 import functions as f
 from functions import parse_args
 import schedule
-import json 
+import json
+import paho.mqtt.client as mqtt
 
 PATH = "/home/daniubo/Scrivania/Git/smartGate/"
-
+BROKER_ADDRESS = "10.79.1.176"
+TOPIC = "smartGate/sg1/mls/flux"
+CLIENT_NAME = "localhost_kagedani"
+client = mqtt.Client(CLIENT_NAME)
+client.connect(BROKER_ADDRESS)
 
 def make_sure_path_exists(path):
 	if not os.path.exists(path):
@@ -34,6 +39,12 @@ def analysis():
 		print("Execution @"+h+":"+m)
 		try:
 			en, ex, real_en, real_ex = jp.just_processing(a, a, 0, 0, use, TIME)
+			data = {
+					"in" : str(ex),
+					"out": str(en)
+			}
+			data_j = json.dumps(data)
+			client.publish(TOPIC, data_j, qos=1)
 		except TypeError:
 			print("--------------------------------------------")
 			print("----------------- ERROR --------------------")
