@@ -10,10 +10,12 @@ import json
 import paho.mqtt.client as mqtt
 
 PATH = "/home/daniubo/Scrivania/Git/smartGate/"
+#PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 BROKER_ADDRESS = "10.79.1.176"
 TOPIC = "smartGate/sg1/mls/flux"
 CLIENT_NAME = "localhost_kagedani"
 client = mqtt.Client(CLIENT_NAME)
+client.loop_start()
 client.connect(BROKER_ADDRESS)
 
 def make_sure_path_exists(path):
@@ -36,6 +38,10 @@ def analysis():
 		h = files[0][80:82]
 		m = files[0][83:85]
 		TIME = files[0][80:85]
+		#indici andre
+		#h = files[0][84:86]
+		#m = files[0][87:89]
+		#TIME = files[0][84:89]
 		print("Execution @"+h+":"+m)
 		try:
 			en, ex, real_en, real_ex = jp.just_processing(a, a, 0, 0, use, TIME)
