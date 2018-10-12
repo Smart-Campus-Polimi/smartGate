@@ -5,8 +5,7 @@
 
 import json
 from functions import parse_args
-import jp_graph_trial as jp
-
+import jp_graph_trial_tryArduino as jp
 import sys
 import getopt
 import csv
@@ -16,7 +15,7 @@ import glob
 use = parse_args()
 TOF = use[5]
 
-DATE = "09_10"
+DATE = "10_10"
 PATH = "/home/daniubo/Scrivania/Git/smartGate/"
 #PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #PATH = "/home/cluster/smartGate/"
@@ -43,6 +42,10 @@ for f in files:
 	#h = f[66:68]
 	#m = f[69:71]
 	#TIME = f[66:71]
+	#indici andre (con sampling)
+	#h = f[104:106]
+	#m = f[107:109]
+	#TIME = f[104:109]
 	print("Execution @"+h+":"+m)
 	try:
 		en, ex, real_en, real_ex = jp.just_processing(a, a, 0, 0, use, TIME)

@@ -14,6 +14,7 @@ BROKER_ADDRESS = "10.79.1.176"
 TOPIC = "smartGate/sg1/mls/flux"
 CLIENT_NAME = "localhost_kagedani"
 client = mqtt.Client(CLIENT_NAME)
+client.loop_start()
 client.connect(BROKER_ADDRESS)
 
 def make_sure_path_exists(path):
