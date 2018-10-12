@@ -10,13 +10,18 @@ import getopt
 import sys
 import csv
 
-DATA = "09-10-2018"
-PATH = "GT_telefono/09_10/"
-DATE =  "09_10.txt"
-FUSO_ORARIO = 7188000
+DATA = "10-10-2018"
+DAY = "10_10"
+PATH = "GT_telefono/"+DAY+"/"
+PATH_ARDUINO_ANALYSIS = "/home/daniubo/Scrivania/Git/smartGate/output/"+DAY+"_lights/"
+DATE =  DAY+".txt"
+LIGHTS_FILE = "output_arduino_lights.txt"
 OUTPUT_PATH_INFRA_TS = "/home/daniubo/Scrivania/Git/smartGate/analysis/match_analysis/"
 OUTPUT_PATH_PIR_TS = "/home/daniubo/Scrivania/Git/smartGate/analysis/match_analysis/"
 OUTPUT_PATH_TOF_TS = "/home/daniubo/Scrivania/Git/smartGate/analysis/match_analysis/"
+
+
+
 
 def just_processing(a, b, delta, var, use, TIME):
 	use_infra = use[0]
@@ -27,6 +32,7 @@ def just_processing(a, b, delta, var, use, TIME):
 	use_tof = use[5]
 	single_tof = use[6]
 	double_tof = use[7]
+	use_arduino = use[8]
 	span = var
 	enough_zero = var
 	infrared_a = [];
@@ -171,7 +177,7 @@ def just_processing(a, b, delta, var, use, TIME):
 			U_b = []
 			ins_a, out_a, E_a, U_a = f.count_entries(activation_p1a,activation_p0a,'A', activation_p1b, activation_p0b, delta, span)
 			ins_b, out_b, E_b, U_b = f.count_entries(activation_p1b,activation_p0b,'B', activation_p1a, activation_p0a, delta, span)
-						
+
 		if processing:
 			I_pir = max(ins_a, ins_b);
 			O_pir= max(out_a, out_b);
@@ -260,7 +266,7 @@ def just_processing(a, b, delta, var, use, TIME):
 				time_vector = f.building_time(packet, round(float(1000/number_of_samples)));
 				partial_tof1 = [list(b) for b in zip(time_vector, tof1_temp)]
 				tof1 = tof1 + partial_tof1;
-		
+
 		tof1 = f.correcting_errors_tof(tof1)
 		tof0 = f.correcting_errors_tof(tof0)
 
@@ -289,6 +295,8 @@ def just_processing(a, b, delta, var, use, TIME):
 			return
 
 		lista_ingressi,lista_uscite = f.get_ground_truth(PATH, DATE, DATA, min_ts_tof, max_ts_tof)
+		if use_arduino:
+			lista_ingressi_arduino, lista_uscite_arduino = f.get_analysis_from_arduino(PATH_ARDUINO_ANALYSIS, LIGHTS_FILE, DATA, min_ts_tof, max_ts_tof)
 
 		#print("--- Lato 0")
 		activation_tof0 = f.activate_tof(uniform_tof0)
@@ -304,7 +312,7 @@ def just_processing(a, b, delta, var, use, TIME):
 			uscite_act = []
 			entrate,uscite, entrate_act, uscite_act = f.count_entries_tof(activation_tof0, activation_tof1, delta_tof, I, O, entrate_act,uscite_act)
 			print("------- RILEVAZIONI ----------")
-			print("Entrate ",entrate,"\nUscite ", uscite)
+			print("Entrate ", uscite,"\nUscite ", entrate)
 			if do_graph:
 				plt.figure(1, figsize=(15,8))
 				plt.plot(lista_ingressi, [10]*len(lista_ingressi), 'ro', color='blue', label='GT entries')
@@ -314,9 +322,11 @@ def just_processing(a, b, delta, var, use, TIME):
 				plt.plot(uniform_tof1, color='orange', label='Lato 1')
 				plt.plot(uniform_tof0, color='red', label='Lato 0')
 				#plt.legend(handles=[green_tof,red_tof,alg_entries,alg_exits,true_exits,true_entries])
-				plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
-
-				plt.show();
+			if use_arduino:
+				plt.plot(lista_ingressi_arduino, [200]*len(lista_ingressi_arduino), 'ro', color='blue', label='Arduino entries')
+				plt.plot(lista_uscite_arduino, [200]*len(lista_uscite_arduino), 'ro', color='green', label='Arduino exits')
+			plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
+			plt.show();
 
 	if check_matching:
 		check_in_TOF = []
@@ -346,7 +356,7 @@ def just_processing(a, b, delta, var, use, TIME):
 
 		check_INF.sort()
 		check_TOF.sort()
-		
+
 		plt.plot(check_in_TOF, [1]*len(check_in_TOF),'ro', color='blue', label='IN TOF')
 		plt.plot(check_out_TOF, [3]*len(check_out_TOF), 'ro', color='green', label='OUT TOF')
 		plt.plot(check_in_INF, [1.5]*len(check_in_INF), 'rx', color='blue', label='IN INF')
@@ -360,7 +370,7 @@ def just_processing(a, b, delta, var, use, TIME):
 		#plt.plot(*zip(*check_INF), 'rx', color='green', label='INF')
 		#plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
 		#plt.show()
-		
+
 		complete_list = []
 		for e in check_TOF:
 			complete_list.append(e)
@@ -376,13 +386,13 @@ def just_processing(a, b, delta, var, use, TIME):
 		print("--------------- Crosschecked TOF ---------------\n")
 		print("\tIN:",count_in,"\tOUT:",count_out,"\n")
 		print("------------------------------------------------\n")
-		
+
 		plt.plot(*zip(*complete_list), 'ro', color='blue', label='Crosschecked TOF')
 		plt.plot(GT_IN, [1.25]*len(GT_IN), 'ro', color='black', label='GT entries')
 		plt.plot(GT_OUT, [3.25]*len(GT_OUT), 'ro', color='red', label='GT exits')
 		plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
 		plt.show()
-		
+
 
 	if use_pir and use_infra:				#opzione non contemplata
 		return I_pir, O_pir, I_inf, O_inf

@@ -14,7 +14,7 @@ function to decide which sensor to analize based on input parameters
 def parse_args():
 	try:
 		print(sys.argv[1:])
-		opts, args = getopt.getopt(sys.argv[1:], "ipcgmtsd", ["infra=", "pir=", "camera=", "graph=", "match=", "tof=", "single=", 'double='])
+		opts, args = getopt.getopt(sys.argv[1:], "ipcgmtsda", ["infra=", "pir=", "camera=", "graph=", "match=", "tof=", "single=", 'double=', 'arduino='])
 	except getopt.GetoptError as e:
 		print(e)
 		sys.exit(0)
@@ -27,6 +27,7 @@ def parse_args():
 	t = False
 	s = False
 	d = False
+	a = False
 
 	for o,a in opts:
 		if o == "-i":
@@ -53,10 +54,13 @@ def parse_args():
 		elif o == "-d":
 			d = True
 			print("double tof enabled")
+		elif o == "-a":
+			a = True
+			print("arduino enabled")
 		else:
 			assert False, "unhandled option"
 
-	return [i,p,c,g,m,t,s,d]
+	return [i,p,c,g,m,t,s,d,a]
 
 
 '''
@@ -405,13 +409,16 @@ def count_entries_tof(act_list0, act_list1, delta, I, O, E, U):
 
 	return I,O,E,U
 
+'''
+Function to retrieve the ground truth of different span in time
+'''
 def get_ground_truth(path, date, data, min_ts, max_ts):
 	lines = [line.rstrip('\n') for line in open(path+date)]
 	ingresso = []
 	lista_ingressi = []
 	uscita = []
 	lista_uscite = []
-	FUSO_ORARIO = 7189000
+	FUSO_ORARIO = 7198000
 	#print (max_ts%86400000+FUSO_ORARIO,"<- max ######### min -> ",min_ts%86400000+FUSO_ORARIO)
 	for i in lines:
 		if i[0] == "I" and i[4:14] == data:
@@ -431,6 +438,37 @@ def get_ground_truth(path, date, data, min_ts, max_ts):
 	print("Entrate ",len(lista_ingressi))
 	print("Uscite ",len(lista_uscite))
 	return list(lista_ingressi),list(lista_uscite)
+
+'''
+analysis of data derived from arduino's algorithm
+- used to compare accuracy of its algorithm and the python one
+'''
+def get_analysis_from_arduino(path, lights_file, data, min_ts, max_ts):
+	lines = [line.rstrip('\n') for line in open(path+lights_file)]
+	ingresso = []
+	lista_ingressi = []
+	uscita = []
+	lista_uscite = []
+	FUSO_ORARIO = 7198000
+	#print (max_ts%86400000+FUSO_ORARIO,"<- max ######### min -> ",min_ts%86400000+FUSO_ORARIO)
+	for i in lines:
+		if i[22:23] == "I" and i[1:11] == data:
+			millisecondi = sum(int(x) * 60 ** j for j,x in enumerate(reversed(i[12:20].split(":"))))*1000
+			#print ("Analisi: ", millisecondi)
+			if millisecondi >= (min_ts%86400000 + FUSO_ORARIO) and millisecondi <= ((max_ts%86400000) + FUSO_ORARIO):
+				#print("I",millisecondi)
+				lista_ingressi.append(millisecondi-(min_ts%86400000 + FUSO_ORARIO))
+		elif i[22:23] == "U" and i[1:11] == data:
+			millisecondi = sum(int(x) * 60 ** j for j,x in enumerate(reversed(i[12:20].split(":"))))*1000
+			#print ("Analisi: ", millisecondi)
+			if millisecondi >= (min_ts%86400000 + FUSO_ORARIO) and millisecondi <= ((max_ts%86400000) + FUSO_ORARIO):
+				#print("O",millisecondi)
+				lista_uscite.append(millisecondi-(min_ts%86400000 + FUSO_ORARIO))
+	print("------- OUTPUT ARDUINO ---------")
+	print("Entrate ",len(lista_uscite))
+	print("Uscite ",len(lista_ingressi))
+	return list(lista_ingressi),list(lista_uscite)
+
 
 # convert timestamp from ms to dates for graphs
 def from_ms_to_date(data):
