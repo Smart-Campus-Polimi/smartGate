@@ -5,7 +5,7 @@
 
 import json
 from functions import parse_args
-import jp_graph_trial_tryArduino as jp
+import jp_graph_trial as jp
 import sys
 import getopt
 import csv
@@ -15,7 +15,7 @@ import glob
 use = parse_args()
 TOF = use[5]
 
-DATE = "10_10"
+DATE = "16_10"
 PATH = "/home/daniubo/Scrivania/Git/smartGate/"
 #PATH = "/Users/wunagana/Documents/GitHub/smartGate/"
 #PATH = "/home/cluster/smartGate/"
@@ -57,8 +57,6 @@ for f in files:
 		print("------- Pass to the next 5 minutes ---------")
 	results = []
 	results.append([h+":"+m, real_en, en, real_ex, ex])
-	'''
 	with open(OUTPUT_PATH+DATE+"_all_flux.csv", 'a') as partial:
 		writer = csv.writer(partial, delimiter=';')
 		writer.writerow(results)
-	'''

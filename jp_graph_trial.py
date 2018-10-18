@@ -312,7 +312,7 @@ def just_processing(a, b, delta, var, use, TIME):
 			uscite_act = []
 			entrate,uscite, entrate_act, uscite_act = f.count_entries_tof(activation_tof0, activation_tof1, delta_tof, I, O, entrate_act,uscite_act)
 			print("------- RILEVAZIONI ----------")
-			print("Entrate ", uscite,"\nUscite ", entrate)
+			print("Entrate ", entrate,"\nUscite ", uscite)
 			if do_graph:
 				plt.figure(1, figsize=(15,8))
 				plt.plot(lista_ingressi, [10]*len(lista_ingressi), 'ro', color='blue', label='GT entries')
@@ -321,12 +321,14 @@ def just_processing(a, b, delta, var, use, TIME):
 				plt.plot(uscite_act, [100]*len(uscite_act), 'ro', color='green', label='algorithm exits')
 				plt.plot(uniform_tof1, color='orange', label='Lato 1')
 				plt.plot(uniform_tof0, color='red', label='Lato 0')
+				plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
+				plt.show();
 				#plt.legend(handles=[green_tof,red_tof,alg_entries,alg_exits,true_exits,true_entries])
 			if use_arduino:
 				plt.plot(lista_ingressi_arduino, [200]*len(lista_ingressi_arduino), 'ro', color='blue', label='Arduino entries')
 				plt.plot(lista_uscite_arduino, [200]*len(lista_uscite_arduino), 'ro', color='green', label='Arduino exits')
-			plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
-			plt.show();
+				plt.legend(bbox_to_anchor=(0., 1.02, 1., .102), loc=3, ncol=2, mode="expand", borderaxespad=0.)
+				plt.show();
 
 	if check_matching:
 		check_in_TOF = []
